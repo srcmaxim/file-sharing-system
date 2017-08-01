@@ -10,7 +10,7 @@ public class Role {
 
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
-    private Long userId;
+    private Long id;
     private String name;
 
 }

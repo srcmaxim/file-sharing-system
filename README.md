@@ -1,3 +1,19 @@
-# File sharing system
-
-Web-application which allow user save files in a server, have the ability to download, listen, view and share files with other users.
+<pre><b>
+                  ~          _______ ___ ___     _______           
+            ~              |       |   |   |   |       |           
+                     .     |    ___|   |   |   |    ___|           
+       (o)--(o)   ~        |   |___|   |   |   |   |___            
+      /.______.\           |    ___|   |   |___|    ___|           
+      \________/           |   |   |   |       |   |___            
+     ./        \.          |___|   |___|_______|_______|           
+   _( .        . ) _______ ______   ___ __    _ _______            
+  |  \ \_\\//_/ / |   _   |    _ | |   |  |  | |       |           
+  |  _##__## |##  |  |_|  |   | || |   |   |_| |    ___| __ _ _    
+  | |_____|       |       |   |_||_|   |       |   | __  \ \ \ \   
+  |_____  |       |       |    __  |   |  _    |   ||  |  \ \ \ \  
+   _____| |   _   |   _   |   |  | |   | | |   |   |_| |   ) ) ) ) 
+  |_______|__| |__|__| |__|___|  |_|___|_|  |__|_______|  / / / /  
+ ========================================================/_/_/_/ 
+ 
+ </b></pre>
+### Web-application which allow user save files in a server, have the ability to download, listen, view and share files with other users.

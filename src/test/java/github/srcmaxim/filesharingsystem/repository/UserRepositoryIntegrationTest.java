@@ -33,12 +33,12 @@ public class UserRepositoryIntegrationTest {
     public void shouldFindAllImportedUsers() {
         List<User> users = repository.findAll();
 
-        assertThat(users).isNotNull().isNotEmpty().doesNotContainNull();
+        assertThat(users).isNotNull().isNotEmpty().doesNotContainNull().hasSize(3);
     }
 
     @Test
     public void shouldFindCreatedUser() {
-        User user = User.createUser(userLogin, userPassword);
+        User user = User.createNewUser(userLogin, userPassword);
         repository.save(user);
 
         user = repository.findOne(user.getId());
@@ -50,7 +50,7 @@ public class UserRepositoryIntegrationTest {
 
     @Test
     public void shouldUpdateCreatedUser() {
-        User user = User.createUser(userLogin, userPassword);
+        User user = User.createNewUser(userLogin, userPassword);
         repository.save(user);
         user.setEmail(userEmail);
         user.setPhone(userPhone);
@@ -65,7 +65,7 @@ public class UserRepositoryIntegrationTest {
 
     @Test
     public void shouldDeleteCreatedUser() {
-        User user = User.createUser(userLogin, userPassword);
+        User user = User.createNewUser(userLogin, userPassword);
         repository.save(user);
         repository.delete(user.getId());
 

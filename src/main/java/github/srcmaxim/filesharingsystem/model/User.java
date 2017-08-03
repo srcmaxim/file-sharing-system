@@ -1,10 +1,11 @@
 package github.srcmaxim.filesharingsystem.model;
 
 import lombok.*;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @ToString(exclude = "password")
@@ -22,11 +23,13 @@ public class User {
     private String lastName;
     private String email;
     private String phone;
-    @ManyToOne(cascade = {CascadeType.REMOVE})
+    @ManyToOne(cascade = {CascadeType.ALL})
     private Role role;
     @Setter(AccessLevel.NONE)
-    @ManyToMany(mappedBy = "users")
-    private Set<Resource> resources = new HashSet<>();
+    @ManyToMany(mappedBy = "users", cascade = {CascadeType.ALL})
+    @SuppressWarnings("deprecation")
+    @Cascade(org.hibernate.annotations.CascadeType.DELETE_ORPHAN)
+    private List<Resource> resources = new ArrayList<>();
 
     public User(String login, String password, Role role) {
         this.login = login;
@@ -34,8 +37,12 @@ public class User {
         this.role = role;
     }
 
-    public static User createUser(String login, String password) {
-        return new User(login, password, Role.ROLE_USER);
+    public static User createNewUser(String login, String password) {
+        User user = new User(login, password, new Role(null , Role.ROLE_USER));
+        user.getResources().add(new Folder("audio", null, user));
+        user.getResources().add(new Folder("video", null, user));
+        user.getResources().add(new Folder("image", null, user));
+        return user;
     }
 
     @Override

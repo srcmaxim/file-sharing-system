@@ -13,8 +13,8 @@ import javax.persistence.Id;
 @Entity
 public class Role {
 
-    public static final Role ROLE_USER = new Role(null, "ROLE_USER");
-    public static final Role ROLE_ADMIN = new Role(null, "ROLE_ADMIN");
+    public static final String ROLE_USER = "ROLE_USER";
+    public static final String ROLE_ADMIN = "ROLE_ADMIN";
 
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)

@@ -8,10 +8,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.List;
-
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 
 @Data
 @NoArgsConstructor
@@ -21,26 +19,17 @@ import static java.util.Collections.emptyList;
 public class Folder extends Resource {
 
     @OneToMany(targetEntity = Resource.class,
-            mappedBy = "parent", cascade = CascadeType.ALL)
-    private List<Resource> resources;
+            mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Resource> resources = new ArrayList<>();
 
-    public Folder(Long id, String name, Folder parent, List<User> users, List<Resource> resources) {
-        super(id, name, parent, users);
+    public Folder(String name, Folder parent, User user) {
+        super(name, parent, user);
         this.resources = resources;
     }
 
     @Override
     public boolean isFile() {
         return false;
-    }
-
-    public static List<Folder> createFoldersForNewUser(User user) {
-        List<User> users = asList(user);
-        List<Resource> resources = emptyList();
-        return asList(
-                new Folder(null, "audio", null, users, resources),
-                new Folder(null, "video", null, users, resources),
-                new Folder(null, "image", null, users, resources));
     }
 
 }

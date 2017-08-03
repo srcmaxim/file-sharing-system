@@ -16,6 +16,10 @@ public class File extends Resource {
         super(id, name, parent, users);
     }
 
+    public File(String name, Folder parent, User user) {
+        super(name, parent, user);
+    }
+
     @Override
     public boolean isFile() {
         return true;

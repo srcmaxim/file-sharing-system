@@ -23,12 +23,19 @@ import java.util.Properties;
 @PropertySource("classpath:application.properties")
 public class Config {
 
-    @Autowired
     private Environment env;
 
-    private String url = getEnvironmentVar("DB_URL", env.getProperty("db.default-url"));
-    private String user = getEnvironmentVar("DB_USER", env.getProperty("db.default-user"));
-    private String pwd = getEnvironmentVar("DB_PWD", env.getProperty("db.default-password"));
+    private String url;
+    private String user;
+    private String password;
+
+    @Autowired
+    public Config(Environment env) {
+        this.env = env;
+        this.url = getEnvironmentVar("DB_URL", env.getProperty("db.default-url"));
+        this.user = getEnvironmentVar("DB_USER", env.getProperty("db.default-user"));
+        this.password = getEnvironmentVar("DB_PWD", env.getProperty("db.default-password"));
+    }
 
     private String getEnvironmentVar(String key, String defaultVar) {
         String env = System.getenv(key);
@@ -37,7 +44,7 @@ public class Config {
 
     @Bean
     public DataSource dataSource() {
-        PoolProperties p = getPoolProperties(url, user, pwd);
+        PoolProperties p = getPoolProperties(url, user, password);
         org.apache.tomcat.jdbc.pool.DataSource datasource =
                 new org.apache.tomcat.jdbc.pool.DataSource();
         datasource.setPoolProperties(p);

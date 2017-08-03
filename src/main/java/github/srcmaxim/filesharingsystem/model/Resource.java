@@ -1,17 +1,35 @@
 package github.srcmaxim.filesharingsystem.model;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.*;
+
+import javax.persistence.*;
+import java.util.List;
 
 @Data
-public abstract class Resource {
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(exclude = {"id", "parent","users"})
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "type")
+public class Resource {
 
     @Setter(AccessLevel.NONE)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Setter(AccessLevel.NONE)
-    private Long parentId;
     private String name;
 
-    public abstract boolean isFile();
+    @ManyToOne
+    private Folder parent;
+
+    @JsonBackReference
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<User> users;
+
+    public boolean isFile() {
+        return false;
+    }
+
 }

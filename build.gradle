@@ -1,6 +1,7 @@
 buildscript {
 	ext {
 		springBootVersion = '1.5.6.RELEASE'
+		springCoreVersion = '4.3.9.RELEASE'
 	}
 	repositories {
 		mavenCentral()
@@ -24,8 +25,8 @@ repositories {
 
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
-	compile('org.springframework.boot:spring-boot-starter-security')
 	compile('org.springframework.boot:spring-boot-starter-web')
+	compile('mysql:mysql-connector-java')
 	compileOnly('org.projectlombok:lombok')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('org.springframework.security:spring-security-test')

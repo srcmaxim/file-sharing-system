@@ -1,9 +1,12 @@
 package github.srcmaxim.filesharingsystem.system;
 
 import org.apache.tomcat.jdbc.pool.PoolProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -17,11 +20,15 @@ import javax.sql.DataSource;
 import java.util.Properties;
 
 @Configuration
+@PropertySource("classpath:application.properties")
 public class Config {
 
-    private String url = getEnvironmentVar("DB_URL", "jdbc:mysql://localhost:3306/file_sharing_system");
-    private String user = getEnvironmentVar("DB_USER", "root");
-    private String pwd = getEnvironmentVar("DB_PWD", "root");
+    @Autowired
+    private Environment env;
+
+    private String url = getEnvironmentVar("DB_URL", env.getProperty("db.default-url"));
+    private String user = getEnvironmentVar("DB_USER", env.getProperty("db.default-user"));
+    private String pwd = getEnvironmentVar("DB_PWD", env.getProperty("db.default-password"));
 
     private String getEnvironmentVar(String key, String defaultVar) {
         String env = System.getenv(key);
@@ -40,7 +47,7 @@ public class Config {
     private PoolProperties getPoolProperties(String url, String username, String password) {
         PoolProperties p = new PoolProperties();
         p.setUrl(url);
-        p.setDriverClassName("com.mysql.jdbc.Driver");
+        p.setDriverClassName(env.getProperty("db.driver"));
         p.setUsername(username);
         p.setPassword(password);
         p.setJmxEnabled(true);
@@ -77,13 +84,13 @@ public class Config {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
 
         Properties props = new Properties();
-        props.setProperty("hibernate.format_sql", "true");
-        props.setProperty("hibernate.hbm2ddl.auto", "create-drop");
+        props.setProperty("hibernate.format_sql", env.getProperty("db.format-sql"));
+        props.setProperty("hibernate.hbm2ddl.auto", env.getProperty("db.generate-ddl"));
 
         LocalContainerEntityManagerFactoryBean emf =
                 new LocalContainerEntityManagerFactoryBean();
         emf.setDataSource(dataSource());
-        emf.setPackagesToScan("github.srcmaxim.filesharingsystem.model");
+        emf.setPackagesToScan(env.getProperty("db.model"));
         emf.setJpaVendorAdapter(jpaVendorAdapter());
         emf.setJpaProperties(props);
 

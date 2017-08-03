@@ -86,6 +86,7 @@ public class Config {
         Properties props = new Properties();
         props.setProperty("hibernate.format_sql", env.getProperty("db.format-sql"));
         props.setProperty("hibernate.hbm2ddl.auto", env.getProperty("db.generate-ddl"));
+        props.setProperty("hibernate.hbm2ddl.import_files", env.getProperty("db.import-files"));
 
         LocalContainerEntityManagerFactoryBean emf =
                 new LocalContainerEntityManagerFactoryBean();

@@ -4,8 +4,6 @@ import github.srcmaxim.filesharingsystem.model.User;
 import github.srcmaxim.filesharingsystem.repository.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
 
@@ -14,18 +12,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+
 public class UserServiceTest {
 
-
-    private UserService service;
+    private UserService service = new UserService();
     private UserRepository repository;
     private List<User> userList;
 
     @Before
     public void init() throws Exception {
         repository = mock(UserRepository.class);
-        service = new UserService();
         service.setRepository(repository);
         userList = asList(
                 User.createNewUser("Jack", "p1"),

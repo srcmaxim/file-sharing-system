@@ -19,12 +19,12 @@ public class UserService {
         return repository.findAll();
     }
 
-    public User saveUser(User user) {
-        return repository.save(user);
-    }
-
     public User findUser(Long id) {
         return repository.findOne(id);
+    }
+
+    public User saveUser(User user) {
+        return repository.save(user);
     }
 
     public User deleteUser(Long id) {

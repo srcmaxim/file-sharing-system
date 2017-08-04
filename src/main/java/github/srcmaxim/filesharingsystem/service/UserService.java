@@ -1,6 +1,5 @@
 package github.srcmaxim.filesharingsystem.service;
 
-import github.srcmaxim.filesharingsystem.model.Folder;
 import github.srcmaxim.filesharingsystem.model.User;
 import github.srcmaxim.filesharingsystem.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +18,6 @@ public class UserService {
     }
 
     public User saveUser(User user) {
-        List<Folder> folders = Folder.createFoldersForNewUser(user);
-        user.getResources().addAll(folders);
         return repository.save(user);
     }
 

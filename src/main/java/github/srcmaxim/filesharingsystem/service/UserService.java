@@ -2,6 +2,7 @@ package github.srcmaxim.filesharingsystem.service;
 
 import github.srcmaxim.filesharingsystem.model.User;
 import github.srcmaxim.filesharingsystem.repository.UserRepository;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,7 @@ import java.util.List;
 public class UserService {
 
     @Autowired
+    @Setter
     private UserRepository repository;
 
     public List<User> findUsers() {
@@ -22,7 +24,7 @@ public class UserService {
     }
 
     public User findUser(Long id) {
-        return repository.getOne(id);
+        return repository.findOne(id);
     }
 
     public User deleteUser(Long id) {

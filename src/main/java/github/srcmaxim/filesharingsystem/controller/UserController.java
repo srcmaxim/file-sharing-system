@@ -17,13 +17,13 @@ public class UserController {
 
     @RequestMapping("")
     @ResponseBody
-    public List<User> findAllUsers() {
+    public List<User> findUsers() {
         return service.findUsers();
     }
 
     @RequestMapping(value = "/{id}")
     @ResponseBody
-    public User createUser(@PathVariable Long id) {
+    public User findUser(@PathVariable Long id) {
         return service.findUser(id);
     }
 

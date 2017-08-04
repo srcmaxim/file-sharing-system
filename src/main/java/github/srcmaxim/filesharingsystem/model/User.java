@@ -1,5 +1,6 @@
 package github.srcmaxim.filesharingsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
 
@@ -23,9 +24,12 @@ public class User {
     private String lastName;
     private String email;
     private String phone;
+
     @ManyToOne(cascade = {CascadeType.ALL})
     private Role role;
+
     @Setter(AccessLevel.NONE)
+    @JsonIgnoreProperties("users")
     @ManyToMany(mappedBy = "users", cascade = {CascadeType.ALL})
     @SuppressWarnings("deprecation")
     @Cascade(org.hibernate.annotations.CascadeType.DELETE_ORPHAN)

@@ -11,10 +11,26 @@ import java.util.List;
 public class ResourceService {
 
     @Autowired
-    private ResourceRepository resource;
+    private ResourceRepository repository;
 
-    public List<Resource> findAll() {
-        return resource.findAll();
+    public List<Resource> findResources() {
+        return repository.findAll();
     }
 
+
+    public Resource saveResource(Resource resource) {
+        return repository.save(resource);
+    }
+
+    public Resource findResource(Long id) {
+        return repository.getOne(id);
+    }
+
+    public Resource deleteResource(Long id) {
+        Resource resource = findResource(id);
+        if (resource != null) {
+            repository.delete(id);
+        }
+        return resource;
+    }
 }

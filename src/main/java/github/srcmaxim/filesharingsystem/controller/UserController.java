@@ -18,7 +18,7 @@ public class UserController {
     @RequestMapping("")
     @ResponseBody
     public List<User> findAllUsers() {
-        return service.findAll();
+        return service.findUsers();
     }
 
     @RequestMapping(value = "/{id}")

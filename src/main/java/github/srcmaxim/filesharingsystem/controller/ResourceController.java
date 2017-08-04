@@ -18,7 +18,7 @@ public class ResourceController {
     @RequestMapping("/resources")
     @ResponseBody
     public List<Resource> findAll() {
-        return service.findAll();
+        return service.findResources();
     }
 
 }

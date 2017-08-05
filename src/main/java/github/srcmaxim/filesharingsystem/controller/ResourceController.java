@@ -29,13 +29,13 @@ public class ResourceController {
 
     @RequestMapping(value = "", method = RequestMethod.POST)
     @ResponseBody
-    public Resource createResource(@ModelAttribute Resource resource) {
+    public Resource createResource(@RequestBody Resource resource) {
         return service.saveResource(resource);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseBody
-    public Resource updateResource(@PathVariable Long id, @ModelAttribute  Resource resource) {
+    public Resource updateResource(@PathVariable Long id, @RequestBody  Resource resource) {
         resource.setId(id);
         return service.saveResource(resource);
     }

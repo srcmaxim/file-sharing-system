@@ -47,4 +47,20 @@ public class Resource {
         return sb.toString();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        if (!(o instanceof Resource)) return false;
+
+        Resource resource = (Resource) o;
+        return name != null ? name.equals(resource.name) : resource.name == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        return result;
+    }
 }

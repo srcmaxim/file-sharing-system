@@ -1,5 +1,6 @@
 package github.srcmaxim.filesharingsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
@@ -15,7 +16,6 @@ import java.util.List;
 @DiscriminatorColumn(name = "type")
 public class Resource {
 
-    @Setter(AccessLevel.NONE)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,6 +24,8 @@ public class Resource {
     @ManyToOne
     private Folder parent;
 
+    @Setter(AccessLevel.NONE)
+    @JsonIgnoreProperties("resources")
     @ManyToMany(fetch = FetchType.EAGER)
     private List<User> users = new ArrayList<>();
 
@@ -45,4 +47,20 @@ public class Resource {
         return sb.toString();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        if (!(o instanceof Resource)) return false;
+
+        Resource resource = (Resource) o;
+        return name != null ? name.equals(resource.name) : resource.name == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        return result;
+    }
 }

@@ -28,7 +28,6 @@ public class User {
     @ManyToOne(cascade = {CascadeType.ALL})
     private Role role;
 
-    @Setter(AccessLevel.NONE)
     @JsonIgnoreProperties("users")
     @ManyToMany(mappedBy = "users", cascade = {CascadeType.ALL})
     @SuppressWarnings("deprecation")
@@ -52,11 +51,10 @@ public class User {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
+        if (o == null) return false;
+        if (!(o instanceof User)) return false;
 
         User user = (User) o;
-
         return login != null ? login.equals(user.login) : user.login == null;
     }
 

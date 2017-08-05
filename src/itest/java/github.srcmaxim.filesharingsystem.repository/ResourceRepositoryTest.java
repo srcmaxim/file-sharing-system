@@ -24,7 +24,7 @@ import static org.junit.Assert.assertEquals;
 @SpringBootTest
 @Import(Config.class)
 @Transactional
-public class ResourceRepositoryIntegrationTest {
+public class ResourceRepositoryTest {
 
     @Autowired
     private ResourceRepository resourceRepository;

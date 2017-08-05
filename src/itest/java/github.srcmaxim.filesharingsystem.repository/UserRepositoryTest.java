@@ -19,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 @SpringBootTest
 @Import(Config.class)
 @Transactional
-public class UserRepositoryIntegrationTest {
+public class UserRepositoryTest {
 
     @Autowired
     private UserRepository repository;

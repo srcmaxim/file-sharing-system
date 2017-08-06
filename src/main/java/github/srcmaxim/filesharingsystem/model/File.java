@@ -24,4 +24,5 @@ public class File extends Resource {
     public boolean isFile() {
         return true;
     }
+
 }

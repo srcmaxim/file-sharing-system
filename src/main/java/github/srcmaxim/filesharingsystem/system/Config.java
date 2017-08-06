@@ -38,8 +38,8 @@ public class Config {
     }
 
     private String getEnvironmentVar(String key, String defaultVar) {
-        String env = System.getenv(key);
-        return env != null ? env : defaultVar;
+        String envVar = System.getenv(key);
+        return envVar != null ? envVar : defaultVar;
     }
 
     @Bean

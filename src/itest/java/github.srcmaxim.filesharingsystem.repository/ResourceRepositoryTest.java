@@ -14,7 +14,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -83,21 +82,4 @@ public class ResourceRepositoryTest {
         return folder;
     }
 
-    @Test
-    public void shouldDeleteCreatedResourcesForNewUser() {
-        User user = User.createNewUser(userLogin, userPassword);
-        user = userRepository.save(user);
-
-        user.getResources().clear();
-        user = userRepository.findOne(user.getId());
-
-        User finalUser = user;
-        List<String> userFileNames = resourceRepository.findAll()
-                .stream().filter(resource -> resource.getUsers().contains(finalUser))
-                .map(Resource::getName)
-                .collect(Collectors.toList());
-        assertThat(userFileNames).doesNotContain("audio", "video", "image");
-    }
-
-
-}
+ }

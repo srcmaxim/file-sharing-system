@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -30,10 +29,7 @@ public class UserController {
 
     @RequestMapping(value = "", method = RequestMethod.POST)
     @ResponseBody
-    public User createUser(@RequestBody User user /*HttpServletRequest request*/) throws IOException {
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        User user = objectMapper. readValue(request.getReader().lines()
-//                .reduce("", (accumulator, actual) -> accumulator + actual), User.class);
+    public User createUser(@RequestBody User user){
         return service.saveUser(user);
     }
 

@@ -23,9 +23,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(UserController.class)
+@WebMvcTest(UserJsonController.class)
 @Import(Config.class)
-public class UserControllerTest {
+public class UserJsonControllerTest {
 
     @Autowired
     private MockMvc mvc;

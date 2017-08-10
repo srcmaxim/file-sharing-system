@@ -1,0 +1,34 @@
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
+    <link type="text/css" rel="stylesheet" href="css/plano2.css"/>
+</head>
+<body>
+
+<h1 th:if="${type} == 'create'">Create user</h1>
+<h1 th:if="${type} == 'update'">Edit user</h1>
+
+<h3><a th:href="@{~/users}">Users</a></h3>
+<form th:action="@{~/users}" method="post">
+    <fieldset>
+        <label for="id">id</label>
+        <input type="text" id="id" name="id" th:value="${user.id}"/>
+        <label for="login">login</label>
+        <input type="text" id="login" name="login" th:value="${user.login}"/>
+        <label for="password">password</label>
+        <input type="text" id="password" name="password" th:value="${user.password}"/>
+        <label for="firstName">firstName</label>
+        <input type="text" id="firstName" name="firstName" th:value="${user.firstName}"/>
+        <label for="lastName">lastName</label>
+        <input type="text" id="lastName" name="lastName" th:value="${user.lastName}"/>
+        <label for="email">email</label>
+        <input type="text" id="email" name="email" th:value="${user.email}"/>
+        <label for="phone">phone</label>
+        <input type="text" id="phone" name="phone" th:value="${user.phone}"/>
+        <input th:if="${type} == 'create'" type="submit" value="Create user"/>
+        <input th:if="${type} == 'update'" type="submit" value="Edit user"/>
+    </fieldset>
+</form>
+
+</body>
+</html>

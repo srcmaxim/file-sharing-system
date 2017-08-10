@@ -1,0 +1,41 @@
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
+    <link type="text/css" rel="stylesheet" href="css/plano2.css"/>
+</head>
+<body>
+<h1>Users</h1>
+<h3><a th:href="@{~/users/create}">Create user</a></h3>
+<table>
+    <thead>
+    <tr>
+        <th>id</th>
+        <th>login</th>
+        <th>password</th>
+        <th>firstName</th>
+        <th>lastName</th>
+        <th>email</th>
+        <th>phone</th>
+
+
+        <th>edit</th>
+        <th>delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user: ${users}">
+        <td><a th:href="@{'~/users/' + ${user.id}}" th:text="${user.id}">id</a></td>
+        <td th:text="${user.login}">login</td>
+        <td th:text="${user.password}">password</td>
+        <td th:text="${user.firstName}">firstName</td>
+        <td th:text="${user.lastName}">lastName</td>
+        <td th:text="${user.email}">email</td>
+        <td th:text="${user.phone}">phone</td>
+
+        <td><a th:href="@{'~/users/' + ${user.id} + '/edit'}">edit</a></td>
+        <td><a th:href="@{'~/users/' + ${user.id} + '/delete'}">delete</a></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

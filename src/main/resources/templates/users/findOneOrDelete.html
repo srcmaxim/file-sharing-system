@@ -1,0 +1,43 @@
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
+    <link type="text/css" rel="stylesheet" href="css/plano2.css"/>
+</head>
+<body>
+<h1 th:if="${type} != 'delete'">User</h1>
+<h1 th:if="${type} == 'delete'">Delete user</h1>
+<h3><a th:href="@{~/users}">Users</a></h3>
+<table>
+    <thead>
+    <tr>
+        <th>id</th>
+        <th>login</th>
+        <th>password</th>
+        <th>firstName</th>
+        <th>lastName</th>
+        <th>email</th>
+        <th>phone</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td th:text="${user.id}">id</td>
+        <td th:text="${user.login}">login</td>
+        <td th:text="${user.password}">password</td>
+        <td th:text="${user.firstName}">firstName</td>
+        <td th:text="${user.lastName}">lastName</td>
+        <td th:text="${user.email}">email</td>
+        <td th:text="${user.phone}">phone</td>
+
+        <td><a th:href="@{'~/users/' + ${user.id} + '/edit'}">edit</a></td>
+        <td><a th:href="@{'~/users/' + ${user.id} + '/delete'}">delete</a></td>
+    </tr>
+    </tbody>
+</table>
+<form th:if="${type} == 'delete'"
+      th:action="@{'~/users/' + ${user.id} + '/delete'}" method="post">
+    <h3>Are you sure delete user?</h3>
+    <input type="submit" value="Delete user"/>
+</form>
+</body>
+</html>

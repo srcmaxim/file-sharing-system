@@ -27,7 +27,7 @@ public class User {
     private String email;
     private String phone;
 
-    @ManyToOne(cascade = {CascadeType.ALL})
+    @ManyToOne(cascade = {CascadeType.PERSIST})
     private Role role;
 
     @JsonIgnoreProperties("users")

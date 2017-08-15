@@ -61,7 +61,7 @@ public class ResourceRepositoryTest {
         Folder audioFolder = getFolderByName(user, "audio");
         String songName = "Beatles - It's been a hard day night";
         audioFolder.getResources().add(
-                new File(songName, audioFolder, user));
+                new File(songName, audioFolder, asList(user)));
 
         userRepository.save(user);
         user = userRepository.findOne(user.getId());

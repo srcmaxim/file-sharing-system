@@ -10,7 +10,7 @@ import java.util.List;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 
 @Data
-@ToString(exclude = {"password", "users"})
+@ToString(exclude = {"password", "resources"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -30,7 +30,7 @@ public class User {
     private Role role;
 
     @JsonIgnoreProperties("users")
-    @ManyToMany(mappedBy = "users", cascade = {CascadeType.ALL})
+    @ManyToMany(mappedBy = "users", cascade = {CascadeType.PERSIST})
     private List<Resource> resources = new ArrayList<>();
 
     public User(String login, String password, Role role) {

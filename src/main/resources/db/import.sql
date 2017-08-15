@@ -15,9 +15,11 @@ insert into file_sharing_system.user (email, firstName, lastName, login, passwor
 insert into file_sharing_system.resource (name, parent_id, type) values ("audio", null, "folder");
 insert into file_sharing_system.resource (name, parent_id, type) values ("video", null, "folder");
 insert into file_sharing_system.resource (name, parent_id, type) values ("image", null, "folder");
+insert into file_sharing_system.resource (name, parent_id, type) values ("beatles.mp3", 2, "file");
 
 insert into file_sharing_system.resource_user (resources_id, users_id) values (1, 1);
 insert into file_sharing_system.resource_user (resources_id, users_id) values (2, 1);
 insert into file_sharing_system.resource_user (resources_id, users_id) values (3, 1);
 insert into file_sharing_system.resource_user (resources_id, users_id) values (2, 2);
 insert into file_sharing_system.resource_user (resources_id, users_id) values (3, 3);
+insert into file_sharing_system.resource_user (resources_id, users_id) values (4, 1);

@@ -1,0 +1,34 @@
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
+    <link type="text/css" rel="stylesheet" href="css/plano2.css"/>
+</head>
+<body>
+<h1>Resources</h1>
+<h3><a th:href="@{~/resources/create}">Create resource</a></h3>
+<table>
+    <thead>
+    <tr>
+        <th>id</th>
+        <th>name</th>
+        <th>parent</th>
+        <th>fullPath</th>
+
+        <th>edit</th>
+        <th>delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="resource: ${resources}">
+        <td><a th:href="@{'~/resources/' + ${resource.id}}" th:text="${resource.id}">id</a></td>
+        <td th:text="${resource.name}">name</td>
+        <td><a th:href="@{'~/resources/' + ${resource.parent?.id}}" th:text="${resource.parent?.id}">parent</a></td>
+        <td th:text="${resource.fullPath}">fullPath</td>
+
+        <td><a th:href="@{'~/resources/' + ${resource.id} + '/edit'}">edit</a></td>
+        <td><a th:href="@{'~/resources/' + ${resource.id} + '/delete'}">delete</a></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

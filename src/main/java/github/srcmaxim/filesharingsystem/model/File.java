@@ -12,12 +12,12 @@ import java.util.List;
 @DiscriminatorValue("file")
 public class File extends Resource {
 
-    public File(Long id, String name, Folder parent, List<User> users) {
-        super(id, name, parent, users);
+    public File(String name, Folder parent, List<User> users) {
+        this(null, name, parent, users);
     }
 
-    public File(String name, Folder parent, User user) {
-        super(name, parent, user);
+    public File(Long id, String name, Folder parent, List<User> users) {
+        super(id, name, parent, users);
     }
 
     @Override

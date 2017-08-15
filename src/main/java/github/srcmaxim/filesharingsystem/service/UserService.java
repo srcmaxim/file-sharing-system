@@ -35,4 +35,7 @@ public class UserService {
         return user;
     }
 
+    public List<User> findUsers(Iterable<Long> ids) {
+        return repository.findAll(ids);
+    }
 }

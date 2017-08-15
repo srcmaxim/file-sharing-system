@@ -9,10 +9,10 @@
 <h1 th:if="${type} == 'update'">Edit user</h1>
 
 <h3><a th:href="@{~/users}">Users</a></h3>
-<form th:action="@{~/users}" method="post">
+<form th:action="@{${user.id}? '~/users/' + ${user.id}: '~/users/'}" method="post">
     <fieldset>
         <label for="id">id</label>
-        <input type="text" id="id" name="id" th:value="${user.id}"/>
+        <input type="number" id="id" name="id" th:value="${user.id}"/>
         <label for="login">login</label>
         <input type="text" id="login" name="login" th:value="${user.login}"/>
         <label for="password">password</label>

@@ -17,6 +17,9 @@
         <th>lastName</th>
         <th>email</th>
         <th>phone</th>
+
+        <th>edit</th>
+        <th>delete</th>
     </tr>
     </thead>
     <tbody>
@@ -31,6 +34,23 @@
 
         <td><a th:href="@{'~/users/' + ${user.id} + '/edit'}">edit</a></td>
         <td><a th:href="@{'~/users/' + ${user.id} + '/delete'}">delete</a></td>
+    </tr>
+    </tbody>
+</table>
+<h3><a th:href="@{~/resources}">Resources</a></h3>
+<table>
+    <thead>
+    <tr>
+        <th>id</th>
+        <th>name</th>
+        <th>parent</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="resource: ${user.resources}">
+        <td><a th:href="@{'~/resources/' + ${resource.id}}" th:text="${resource.id}">id</a></td>
+        <td th:text="${resource.name}">name</td>
+        <td th:text="${resource.parent?.id}">parent</td>
     </tr>
     </tbody>
 </table>

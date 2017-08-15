@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = {"id", "parent","users"})
+@ToString(exclude = {"parent", "users"})
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type")
@@ -21,12 +21,12 @@ public class Resource {
     private Long id;
     private String name;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private Folder parent;
 
     @Setter(AccessLevel.NONE)
     @JsonIgnoreProperties("resources")
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.PERSIST)
     private List<User> users = new ArrayList<>();
 
     public Resource(String name, Folder parent, User user) {
@@ -41,8 +41,10 @@ public class Resource {
 
     public String getFullPath() {
         StringBuilder sb = new StringBuilder(name);
+        Folder parent  = getParent();
         while (parent != null) {
             sb.insert(0, parent.getName() + "/");
+            parent = parent.getParent();
         }
         return sb.toString();
     }

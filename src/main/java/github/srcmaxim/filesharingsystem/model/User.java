@@ -1,17 +1,16 @@
 package github.srcmaxim.filesharingsystem.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.codehaus.groovy.runtime.InvokerHelper.asList;
+
 @Data
-@ToString(exclude = "password")
+@ToString(exclude = {"password", "users"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -42,9 +41,10 @@ public class User {
 
     public static User createNewUser(String login, String password) {
         User user = new User(login, password, new Role(null , Role.ROLE_USER));
-        user.getResources().add(new Folder("audio", null, user));
-        user.getResources().add(new Folder("video", null, user));
-        user.getResources().add(new Folder("image", null, user));
+        List<User> userList = asList(user);
+        user.getResources().add(new Folder("audio", null, userList));
+        user.getResources().add(new Folder("video", null, userList));
+        user.getResources().add(new Folder("image", null, userList));
         return user;
     }
 

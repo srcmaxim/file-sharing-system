@@ -48,7 +48,7 @@ public class Config {
         org.apache.tomcat.jdbc.pool.DataSource datasource =
                 new org.apache.tomcat.jdbc.pool.DataSource();
         datasource.setPoolProperties(p);
-        return datasource ;
+        return datasource;
     }
 
     private PoolProperties getPoolProperties(String url, String username, String password) {
@@ -67,14 +67,13 @@ public class Config {
         p.setMaxActive(100);
         p.setInitialSize(10);
         p.setMaxWait(10000);
-        p.setRemoveAbandonedTimeout(60);
+        p.setRemoveAbandonedTimeout(3 * 60);
         p.setMinEvictableIdleTimeMillis(30000);
         p.setMinIdle(10);
         p.setLogAbandoned(true);
         p.setRemoveAbandoned(true);
-        p.setJdbcInterceptors(
-                "org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;"+
-                        "org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer");
+        p.setJdbcInterceptors("org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;" +
+                "org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer");
         return p;
     }
 
@@ -89,7 +88,6 @@ public class Config {
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-
         Properties props = new Properties();
         props.setProperty("hibernate.format_sql", env.getProperty("db.format-sql"));
         props.setProperty("hibernate.hbm2ddl.auto", env.getProperty("db.generate-ddl"));

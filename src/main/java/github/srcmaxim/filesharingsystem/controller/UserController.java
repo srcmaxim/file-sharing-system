@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -49,10 +48,11 @@ public class UserController {
         return "users/createOrUpdate";
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public String updateUser(@PathVariable Long id, @RequestBody User user) {
+    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
+    public String updateUser(@PathVariable Long id, User user) {
         user.setId(id);
-        return "users/findAll";
+        service.saveUser(user);
+        return "redirect:/users/" + id;
     }
 
     @RequestMapping(value = "/{id}/delete")

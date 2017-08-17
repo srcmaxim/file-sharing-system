@@ -15,14 +15,14 @@ import static org.mockito.Mockito.when;
 
 public class UserServiceTest {
 
-    private UserService service = new UserService();
+    private UserService service;
     private UserRepository repository;
     private List<User> userList;
 
     @Before
     public void init() throws Exception {
         repository = mock(UserRepository.class);
-        service.setRepository(repository);
+        service = new UserService(repository);
         userList = asList(
                 User.createNewUser("Jack", "p1"),
                 User.createNewUser("Jones", "p2")

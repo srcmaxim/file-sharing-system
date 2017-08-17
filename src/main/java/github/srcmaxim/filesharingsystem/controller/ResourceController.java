@@ -18,23 +18,27 @@ import static java.util.stream.Collectors.toList;
 @RequestMapping("/resources")
 public class ResourceController {
 
-    @Autowired
     private ResourceService service;
 
+    @Autowired
+    public ResourceController(ResourceService service) {
+        this.service = service;
+    }
+
     @RequestMapping("")
-    public String findResourcesView(Model model) {
+    public String souldFindResourcesView(Model model) {
         model.addAttribute("resources", service.findResources());
         return "resources/findAll";
     }
 
     @RequestMapping(value = "/{id}")
-    public String findResourceView(@PathVariable Long id, Model model) {
+    public String souldFindResourceView(@PathVariable Long id, Model model) {
         model.addAttribute("resource", service.findResource(id));
         return "resources/findOneOrDelete";
     }
 
     @RequestMapping(value = "/create")
-    public String createResourceView(Model model) {
+    public String souldCreateResourceView(Model model) {
         model.addAttribute("resource", new Resource());
         model.addAttribute("type", "create");
         model.addAttribute("resourceUserIds", "");
@@ -42,14 +46,14 @@ public class ResourceController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public String createResource(Resource resource, Long parentId, String userIds, String type) {
+    public String souldCreateResource(Resource resource, Long parentId, String userIds, String type) {
         List<Long> ids = Arrays.stream(userIds.split(", ")).map(Long::valueOf).collect(toList());
         resource = service.saveResource(resource, parentId, ids, type);
         return "redirect:/resources/" + resource.getId();
     }
 
     @RequestMapping(value = "/{id}/edit")
-    public String updateResourceView(@PathVariable Long id, Model model) {
+    public String souldUpdateResourceView(@PathVariable Long id, Model model) {
         Resource resource = service.findResource(id);
         model.addAttribute("resource", resource);
         model.addAttribute("type", "update");
@@ -60,7 +64,7 @@ public class ResourceController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.POST)
-    public String updateResource(@PathVariable Long id, Resource resource, Long parentId, String userIds, String type) {
+    public String souldUpdateResource(@PathVariable Long id, Resource resource, Long parentId, String userIds, String type) {
         resource.setId(id);
         List<Long> ids = Arrays.stream(userIds.split(", ")).map(Long::valueOf).collect(toList());
         resource = service.saveResource(resource, parentId, ids, type);
@@ -68,14 +72,14 @@ public class ResourceController {
     }
 
     @RequestMapping(value = "/{id}/delete")
-    public String deleteResourceView(@PathVariable Long id, Model model) {
+    public String souldDeleteResourceView(@PathVariable Long id, Model model) {
         model.addAttribute("resource", service.findResource(id));
         model.addAttribute("type", "delete");
         return "resources/findOneOrDelete";
     }
 
     @RequestMapping(value = "/{id}/delete", method = RequestMethod.POST)
-    public String deleteResource(@PathVariable Long id) {
+    public String souldDeleteResource(@PathVariable Long id) {
         service.deleteResource(id);
         return "redirect:/resources";
     }

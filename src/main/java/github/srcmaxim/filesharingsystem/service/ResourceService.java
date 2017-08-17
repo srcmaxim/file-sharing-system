@@ -5,7 +5,6 @@ import github.srcmaxim.filesharingsystem.model.Folder;
 import github.srcmaxim.filesharingsystem.model.Resource;
 import github.srcmaxim.filesharingsystem.model.User;
 import github.srcmaxim.filesharingsystem.repository.ResourceRepository;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,13 +16,14 @@ import static java.util.stream.Collectors.toList;
 @Service
 public class ResourceService {
 
-    @Autowired
-    @Setter
     private ResourceRepository repository;
+    private UserService userService;
 
     @Autowired
-    @Setter
-    private UserService userService;
+    public ResourceService(ResourceRepository repository, UserService userService) {
+        this.repository = repository;
+        this.userService = userService;
+    }
 
     @Transactional(Transactional.TxType.SUPPORTS)
     public List<Resource> findResources() {

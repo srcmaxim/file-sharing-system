@@ -48,7 +48,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void findUsersView() throws Exception {
+    public void shouldFindUsersView() throws Exception {
         when(userService.findUsers()).thenReturn(users);
 
         mvc.perform(get("/users"))
@@ -62,7 +62,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void findUserView() throws Exception {
+    public void shouldFindUserView() throws Exception {
         when(userService.findUser(1L)).thenReturn(user);
 
         mvc.perform(get("/users/1"))
@@ -75,7 +75,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void createUserView() throws Exception {
+    public void shouldCreateUserView() throws Exception {
         mvc.perform(get("/users/create"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("users/createOrUpdate"))
@@ -87,7 +87,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void createUser() throws Exception {
+    public void shouldCreateUser() throws Exception {
         mvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("id", "1")
@@ -110,7 +110,7 @@ public class UserControllerTest {
         verifyNoMoreInteractions(userService);
     }
 
-    public void updateUserView() throws Exception {
+    public void shouldUpdateUserView() throws Exception {
         when(userService.findUser(1L)).thenReturn(user);
 
         mvc.perform(get("/users/{id}/edit", 1L)
@@ -124,7 +124,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void updateUser() throws Exception {
+    public void shouldUpdateUser() throws Exception {
         mvc.perform(post("/users/{id}", 1L)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("id", "1")
@@ -148,7 +148,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void deleteUserView() throws Exception {
+    public void shouldDeleteUserView() throws Exception {
         when(userService.findUser(1L)).thenReturn(user);
 
         mvc.perform(get("/users/{id}/delete", 1L))
@@ -161,7 +161,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void deleteUser() throws Exception {
+    public void shouldDeleteUser() throws Exception {
         when(userService.findUser(1L)).thenReturn(user);
 
         mvc.perform(post("/users/{id}/delete", 1L))

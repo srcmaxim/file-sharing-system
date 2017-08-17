@@ -58,7 +58,7 @@
 </table>
 <form th:if="${type} == 'delete'"
       th:action="@{'~/resources/' + ${resource.id} + '/delete'}" method="post">
-    <h3>Are you sure delete resource?</h3>
+    <h3>Are you sure you want to delete this resource?</h3>
     <input type="submit" value="Delete resource"/>
 </form>
 </body>

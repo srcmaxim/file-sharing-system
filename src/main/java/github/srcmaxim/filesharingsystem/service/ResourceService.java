@@ -52,7 +52,7 @@ public class ResourceService {
     @Transactional(Transactional.TxType.REQUIRED)
     public Resource saveResource(Resource resource, Long parentId, List<Long> userIds, String type) {
         Folder parent = (parentId == null) ? null : (Folder) findResource(parentId);
-        userIds = userIds.stream().filter(userId -> userId == null).collect(toList());
+        userIds = userIds.stream().filter(userId -> userId != null).collect(toList());
         List<User> users = userService.findUsers(userIds);
         resource = "file".equals(type)
                 ? new File(resource.getName(), parent, users)

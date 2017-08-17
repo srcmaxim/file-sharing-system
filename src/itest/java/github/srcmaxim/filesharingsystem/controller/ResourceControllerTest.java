@@ -58,7 +58,7 @@ public class ResourceControllerTest {
     }
 
     @Test
-    public void findResourcesView() throws Exception {
+    public void shouldFindResourcesView() throws Exception {
         when(resourceService.findResources()).thenReturn(resources1);
 
         mvc.perform(get("/resources"))
@@ -72,7 +72,7 @@ public class ResourceControllerTest {
     }
 
     @Test
-    public void findResourceView() throws Exception {
+    public void shouldFindResourceView() throws Exception {
         when(resourceService.findResource(1L)).thenReturn(resource2);
 
         mvc.perform(get("/resources/1"))
@@ -85,7 +85,7 @@ public class ResourceControllerTest {
     }
 
     @Test
-    public void createResourceView() throws Exception {
+    public void shouldCreateResourceView() throws Exception {
         mvc.perform(get("/resources/create"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("resources/createOrUpdate"))
@@ -97,7 +97,7 @@ public class ResourceControllerTest {
     }
 
     @Test
-    public void createResource() throws Exception {
+    public void shouldCreateResource() throws Exception {
         File resource = new File(1L, "name", null, null);
         Folder parentFolder = new Folder(2L, null, null, null);
         when(resourceService.saveResource(resource, 2L, asList(1L, 2L), "file"))
@@ -119,7 +119,7 @@ public class ResourceControllerTest {
         verifyNoMoreInteractions(resourceService);
     }
 
-    public void updateUserView() throws Exception {
+    public void shouldUpdateUserView() throws Exception {
         when(resourceService.findResource(1L)).thenReturn(resource2);
 
         mvc.perform(get("/resources/{id}/edit", 1L)
@@ -133,7 +133,7 @@ public class ResourceControllerTest {
     }
 
     @Test
-    public void updateResource() throws Exception {
+    public void shouldUpdateResource() throws Exception {
         when(resourceService.findResource(2L)).thenReturn(resource2);
         when(userService.findUsers(asList(1L))).thenReturn(asList(user1));
 
@@ -154,7 +154,7 @@ public class ResourceControllerTest {
     }
 
     @Test
-    public void deleteResourceView() throws Exception {
+    public void shouldDeleteResourceView() throws Exception {
         when(resourceService.findResource(1L)).thenReturn(resource2);
 
         mvc.perform(get("/resources/{id}/delete", 1L))
@@ -167,7 +167,7 @@ public class ResourceControllerTest {
     }
 
     @Test
-    public void deleteResource() throws Exception {
+    public void shouldDeleteResource() throws Exception {
         when(resourceService.findResource(1L)).thenReturn(resource2);
 
         mvc.perform(post("/resources/{id}/delete", 1L))

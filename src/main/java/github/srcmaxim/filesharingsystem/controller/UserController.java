@@ -13,8 +13,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping("/users")
 public class UserController {
 
-    @Autowired
     private UserService service;
+
+    @Autowired
+    public UserController(UserService service) {
+        this.service = service;
+    }
 
     @RequestMapping(value = "")
     public String findUsersView(Model model) {

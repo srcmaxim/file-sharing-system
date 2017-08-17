@@ -18,8 +18,12 @@ import static java.util.stream.Collectors.toList;
 @RequestMapping("/resources")
 public class ResourceController {
 
-    @Autowired
     private ResourceService service;
+
+    @Autowired
+    public ResourceController(ResourceService service) {
+        this.service = service;
+    }
 
     @RequestMapping("")
     public String findResourcesView(Model model) {

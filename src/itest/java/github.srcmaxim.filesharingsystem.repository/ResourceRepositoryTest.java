@@ -37,7 +37,7 @@ public class ResourceRepositoryTest {
     public void shouldFindAllImportedResources() {
         List<Resource> resources = resourceRepository.findAll();
 
-        assertThat(resources).isNotNull().isNotEmpty().doesNotContainNull().hasSize(3);
+        assertThat(resources).isNotNull().isNotEmpty().doesNotContainNull().hasSize(4);
     }
 
     @Test

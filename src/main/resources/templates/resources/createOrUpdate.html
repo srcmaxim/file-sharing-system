@@ -1,32 +1,48 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
-    <link type="text/css" rel="stylesheet" href="css/bootstrap.css"/>
-    <script src="js/bootstrap.min.js"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/css/bootstrap.min.css"
+          rel="stylesheet" media="screen" th:href="@{/static/css/bootstrap.min.css}"/>
 </head>
 <body>
-<h1 th:if="${type} == 'create'">Create resource</h1>
-<h1 th:if="${type} == 'update'">Edit resource</h1>
-<h3><a th:href="@{~/resources}">Resources</a></h3>
-<form th:action="@{${resource.id}? '~/resources/' + ${resource.id}: '~/resources/'}" method="post">
-    <fieldset>
-        <label for="id">id</label>
-        <input type="number" id="id" name="id" th:value="${resource.id}"/>
-        <label for="name">name</label>
-        <input type="text" id="name" name="name" th:value="${resource.name}"/>
-        <label for="type">type</label>
-        <select id="type" name="type" th:value="${resource.getClass().getSimpleName().toLowerCase()}">
-            <option value="file">file</option>
-            <option value="folder">folder</option>
-        </select>
-        <label for="parentId">parent</label>
-        <input type="number" id="parentId" name="parentId" th:value="${resource.parent?.id}"/>
-        <label for="userIds">users</label>
-        <input type="text" id="userIds" name="userIds" th:value="${resourceUserIds}"/>
-        <input th:if="${type} == 'create'" type="submit" value="Create resource"/>
-        <input th:if="${type} == 'update'" type="submit" value="Edit resource"/>
-    </fieldset>
-</form>
+
+<div th:replace="/fragments/header :: header('resources')">Header</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 th:if="${type} == 'create'">Create resource</h1>
+            <h1 th:if="${type} == 'update'">Edit resource</h1>
+            <br/>
+            <h3><a th:href="@{~/resources}">Resources</a></h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <form th:action="@{${resource.id}? '~/resources/' + ${resource.id}: '~/resources/'}" method="post">
+                <fieldset>
+                    <label for="id">id</label>
+                    <input type="number" id="id" name="id" th:value="${resource.id}"/>
+                    <label for="name">name</label>
+                    <input type="text" id="name" name="name" th:value="${resource.name}"/>
+                    <label for="type">type</label>
+                    <select id="type" name="type" th:value="${resource.getClass().getSimpleName().toLowerCase()}">
+                        <option value="file">file</option>
+                        <option value="folder">folder</option>
+                    </select>
+                    <label for="parentId">parent</label>
+                    <input type="number" id="parentId" name="parentId" th:value="${resource.parent?.id}"/>
+                    <label for="userIds">users</label>
+                    <input type="text" id="userIds" name="userIds" th:value="${resourceUserIds}"/>
+                    <input th:if="${type} == 'create'" type="submit" value="Create resource"/>
+                    <input th:if="${type} == 'update'" type="submit" value="Edit resource"/>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div th:replace="/fragments/footer">&copy; 2017 File Sharing System</div>
 
 </body>
 </html>

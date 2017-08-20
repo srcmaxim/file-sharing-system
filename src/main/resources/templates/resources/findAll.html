@@ -1,35 +1,53 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
-    <link type="text/css" rel="stylesheet" href="css/bootstrap.css"/>
-    <script src="js/bootstrap.min.js"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/css/bootstrap.min.css"
+          rel="stylesheet" media="screen" th:href="@{/static/css/bootstrap.min.css}"/>
 </head>
 <body>
-<h1>Resources</h1>
-<h3><a th:href="@{~/resources/create}">Create resource</a></h3>
-<table>
-    <thead>
-    <tr>
-        <th>id</th>
-        <th>name</th>
-        <th>parent</th>
-        <th>fullPath</th>
 
-        <th>edit</th>
-        <th>delete</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="resource: ${resources}">
-        <td><a th:href="@{'~/resources/' + ${resource.id}}" th:text="${resource.id}">id</a></td>
-        <td th:text="${resource.name}">name</td>
-        <td><a th:href="@{'~/resources/' + ${resource.parent?.id}}" th:text="${resource.parent?.id}">parent</a></td>
-        <td th:text="${resource.fullPath}">fullPath</td>
+<div th:replace="/fragments/header :: header('resources')">Header</div>
 
-        <td><a th:href="@{'~/resources/' + ${resource.id} + '/edit'}">edit</a></td>
-        <td><a th:href="@{'~/resources/' + ${resource.id} + '/delete'}">delete</a></td>
-    </tr>
-    </tbody>
-</table>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Resources</h1>
+            <br/>
+            <h3><a th:href="@{~/resources/create}">Create resource</a></h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>id</th>
+                    <th>name</th>
+                    <th>parent</th>
+                    <th>fullPath</th>
+
+                    <th>edit</th>
+                    <th>delete</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="resource: ${resources}">
+                    <td><a th:href="@{'~/resources/' + ${resource.id}}" th:text="${resource.id}">id</a></td>
+                    <td th:text="${resource.name}">name</td>
+                    <td><a th:href="@{'~/resources/' + ${resource.parent?.id}}"
+                           th:text="${resource.parent?.id}">parent</a></td>
+                    <td th:text="${resource.fullPath}">fullPath</td>
+
+                    <td><a th:href="@{'~/resources/' + ${resource.id} + '/edit'}">edit</a></td>
+                    <td><a th:href="@{'~/resources/' + ${resource.id} + '/delete'}">delete</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div th:replace="/fragments/footer">&copy; 2017 File Sharing System</div>
+
 </body>
 </html>

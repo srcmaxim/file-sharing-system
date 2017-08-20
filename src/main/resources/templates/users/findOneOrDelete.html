@@ -1,66 +1,84 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
-    <link type="text/css" rel="stylesheet" href="css/bootstrap.css"/>
-    <script src="js/bootstrap.min.js"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/css/bootstrap.min.css"
+          rel="stylesheet" media="screen" th:href="@{/static/css/bootstrap.min.css}"/>
 </head>
 <body>
-<h1 th:if="${type} != 'delete'">User</h1>
-<h1 th:if="${type} == 'delete'">Delete user</h1>
-<h3><a th:href="@{~/users}">Users</a></h3>
-<table>
-    <thead>
-    <tr>
-        <th>id</th>
-        <th>login</th>
-        <th>password</th>
-        <th>firstName</th>
-        <th>lastName</th>
-        <th>email</th>
-        <th>phone</th>
 
-        <th>edit</th>
-        <th>delete</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td th:text="${user.id}">id</td>
-        <td th:text="${user.login}">login</td>
-        <td th:text="${user.password}">password</td>
-        <td th:text="${user.firstName}">firstName</td>
-        <td th:text="${user.lastName}">lastName</td>
-        <td th:text="${user.email}">email</td>
-        <td th:text="${user.phone}">phone</td>
+<div th:replace="/fragments/header :: header('users')">Header</div>
 
-        <td><a th:href="@{'~/users/' + ${user.id} + '/edit'}">edit</a></td>
-        <td><a th:href="@{'~/users/' + ${user.id} + '/delete'}">delete</a></td>
-    </tr>
-    </tbody>
-</table>
-<h3><a th:href="@{~/resources}">Resources</a></h3>
-<table>
-    <thead>
-    <tr>
-        <th>id</th>
-        <th>name</th>
-        <th>parent</th>
-        <th>fullPath</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="resource: ${user.resources}">
-        <td><a th:href="@{'~/resources/' + ${resource.id}}" th:text="${resource.id}">id</a></td>
-        <td th:text="${resource.name}">name</td>
-        <td><a th:href="@{'~/resources/' + ${resource.parent?.id}}" th:text="${resource.parent?.id}">parent</a></td>
-        <td th:text="${resource.fullPath}">fullPath</td>
-    </tr>
-    </tbody>
-</table>
-<form th:if="${type} == 'delete'"
-      th:action="@{'~/users/' + ${user.id} + '/delete'}" method="post">
-    <h3>Are you sure you want to delete this user?</h3>
-    <input type="submit" value="Delete user"/>
-</form>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 th:if="${type} != 'delete'">User</h1>
+            <h1 th:if="${type} == 'delete'">Delete user</h1>
+            <br/>
+            <h3><a th:href="@{~/users}">Users</a></h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>id</th>
+                    <th>login</th>
+                    <th>password</th>
+                    <th>firstName</th>
+                    <th>lastName</th>
+                    <th>email</th>
+                    <th>phone</th>
+
+                    <th>edit</th>
+                    <th>delete</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td th:text="${user.id}">id</td>
+                    <td th:text="${user.login}">login</td>
+                    <td th:text="${user.password}">password</td>
+                    <td th:text="${user.firstName}">firstName</td>
+                    <td th:text="${user.lastName}">lastName</td>
+                    <td th:text="${user.email}">email</td>
+                    <td th:text="${user.phone}">phone</td>
+
+                    <td><a th:href="@{'~/users/' + ${user.id} + '/edit'}">edit</a></td>
+                    <td><a th:href="@{'~/users/' + ${user.id} + '/delete'}">delete</a></td>
+                </tr>
+                </tbody>
+            </table>
+            <h3><a th:href="@{~/resources}">Resources</a></h3>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>id</th>
+                    <th>name</th>
+                    <th>parent</th>
+                    <th>fullPath</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="resource: ${user.resources}">
+                    <td><a th:href="@{'~/resources/' + ${resource.id}}" th:text="${resource.id}">id</a></td>
+                    <td th:text="${resource.name}">name</td>
+                    <td><a th:href="@{'~/resources/' + ${resource.parent?.id}}"
+                           th:text="${resource.parent?.id}">parent</a></td>
+                    <td th:text="${resource.fullPath}">fullPath</td>
+                </tr>
+                </tbody>
+            </table>
+            <form th:if="${type} == 'delete'"
+                  th:action="@{'~/users/' + ${user.id} + '/delete'}" method="post">
+                <h3>Are you sure you want to delete this user?</h3>
+                <input type="submit" value="Delete user"/>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div th:replace="/fragments/footer">&copy; 2017 File Sharing System</div>
+
 </body>
 </html>

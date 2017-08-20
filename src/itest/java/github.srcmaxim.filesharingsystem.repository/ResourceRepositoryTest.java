@@ -4,7 +4,7 @@ import github.srcmaxim.filesharingsystem.model.File;
 import github.srcmaxim.filesharingsystem.model.Folder;
 import github.srcmaxim.filesharingsystem.model.Resource;
 import github.srcmaxim.filesharingsystem.model.User;
-import github.srcmaxim.filesharingsystem.system.Config;
+import github.srcmaxim.filesharingsystem.system.DbConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Import(Config.class)
+@Import(DbConfig.class)
 @Transactional
 public class ResourceRepositoryTest {
 

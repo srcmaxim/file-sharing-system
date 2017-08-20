@@ -4,6 +4,7 @@ import org.apache.tomcat.jdbc.pool.PoolProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -20,8 +21,9 @@ import javax.sql.DataSource;
 import java.util.Properties;
 
 @Configuration
+@ComponentScan
 @PropertySource("classpath:application.properties")
-public class Config {
+public class DbConfig {
 
     private Environment env;
 
@@ -30,7 +32,7 @@ public class Config {
     private String password;
 
     @Autowired
-    public Config(Environment env) {
+    public DbConfig(Environment env) {
         this.env = env;
         this.url = getEnvironmentVar("DB_URL", env.getProperty("db.default-url"));
         this.user = getEnvironmentVar("DB_USER", env.getProperty("db.default-user"));

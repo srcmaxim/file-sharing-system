@@ -2,7 +2,7 @@ package github.srcmaxim.filesharingsystem.controller;
 
 import github.srcmaxim.filesharingsystem.model.User;
 import github.srcmaxim.filesharingsystem.service.UserService;
-import github.srcmaxim.filesharingsystem.system.Config;
+import github.srcmaxim.filesharingsystem.system.DbConfig;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(UserController.class)
-@Import(Config.class)
+@Import(DbConfig.class)
 public class UserControllerTest {
 
     @Autowired

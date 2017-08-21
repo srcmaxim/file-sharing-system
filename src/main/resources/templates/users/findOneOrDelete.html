@@ -45,8 +45,8 @@
                     <td th:text="${user.email}">email</td>
                     <td th:text="${user.phone}">phone</td>
 
-                    <td><a th:href="@{'~/users/' + ${user.id} + '/edit'}">edit</a></td>
-                    <td><a th:href="@{'~/users/' + ${user.id} + '/delete'}">delete</a></td>
+                    <td><a class="btn btn-sm btn-success" th:href="@{'~/users/' + ${user.id} + '/edit'}">edit</a></td>
+                    <td><a class="btn btn-sm btn-danger" th:href="@{'~/users/' + ${user.id} + '/delete'}">delete</a></td>
                 </tr>
                 </tbody>
             </table>

@@ -40,8 +40,8 @@
                            th:text="${resource.parent?.id}">parent</a></td>
                     <td th:text="${resource.fullPath}">fullPath</td>
 
-                    <td><a th:href="@{'~/resources/' + ${resource.id} + '/edit'}">edit</a></td>
-                    <td><a th:href="@{'~/resources/' + ${resource.id} + '/delete'}">delete</a></td>
+                    <td><a class="btn btn-sm btn-success" th:href="@{'~/resources/' + ${resource.id} + '/edit'}">edit</a></td>
+                    <td><a class="btn btn-sm btn-danger" th:href="@{'~/resources/' + ${resource.id} + '/delete'}">delete</a></td>
                 </tr>
                 </tbody>
             </table>

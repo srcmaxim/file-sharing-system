@@ -19,25 +19,50 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-8 mx-auto">
             <form th:action="@{${resource.id}? '~/resources/' + ${resource.id}: '~/resources/'}" method="post">
-                <fieldset>
-                    <label for="id">id</label>
-                    <input type="number" id="id" name="id" th:value="${resource.id}"/>
-                    <label for="name">name</label>
-                    <input type="text" id="name" name="name" th:value="${resource.name}"/>
-                    <label for="type">type</label>
-                    <select id="type" name="type" th:value="${resource.getClass().getSimpleName().toLowerCase()}">
-                        <option value="file">file</option>
-                        <option value="folder">folder</option>
-                    </select>
-                    <label for="parentId">parent</label>
-                    <input type="number" id="parentId" name="parentId" th:value="${resource.parent?.id}"/>
-                    <label for="userIds">users</label>
-                    <input type="text" id="userIds" name="userIds" th:value="${resourceUserIds}"/>
-                    <input th:if="${type} == 'create'" type="submit" value="Create resource"/>
-                    <input th:if="${type} == 'update'" type="submit" value="Edit resource"/>
-                </fieldset>
+
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label" for="id">Id</label>
+                    <div class="col-sm-9">
+                        <input class="form-control" placeholder="Id" type="number" id="id" name="id" th:value="${resource.id}"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label" for="name">Name</label>
+                    <div class="col-sm-9">
+                        <input class="form-control" placeholder="Name" type="text" id="name" name="name" th:value="${resource.name}"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label" for="type">Type</label>
+                    <div class="col-sm-9">
+                        <select class="form-control" id="type" name="type" th:value="${resource.getClass().getSimpleName().toLowerCase()}">
+                            <option value="file">file</option>
+                            <option value="folder">folder</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label" for="parentId">Parent</label>
+                    <div class="col-sm-9">
+                        <input class="form-control" placeholder="Parent" type="number" id="parentId" name="parentId" th:value="${resource.parent?.id}"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label" for="userIds">Users</label>
+                    <div class="col-sm-9">
+                        <input class="form-control" placeholder="Users" type="text" id="userIds" name="userIds" th:value="${resourceUserIds}"/>
+                    </div>
+                </div>
+
+
+                <div class="form-group row">
+                    <div class="col-sm-9">
+                        <input class="btn btn-primary" th:if="${type} == 'create'" type="submit" value="Create resource"/>
+                        <input class="btn btn-primary" th:if="${type} == 'update'" type="submit" value="Edit resource"/>
+                    </div>
+                </div>
             </form>
         </div>
     </div>

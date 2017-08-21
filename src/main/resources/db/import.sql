@@ -6,9 +6,9 @@ insert into file_sharing_system.role (name) values ("ROLE_USER"), ("ROLE_ADMIN")
 
 
 
-insert into file_sharing_system.user (email, firstName, lastName, login, password, phone, role_id) values ("srcmaxim@gmail.com", "Maksim", "Koval", "srcmaxim", "12345qaz", "0671231568", 2);
-insert into file_sharing_system.user (email, firstName, lastName, login, password, phone, role_id) values ("tima@gmail.com", "Timofey", "Koval", "tima", "12345qaz", "0671231438", 1);
-insert into file_sharing_system.user (email, firstName, lastName, login, password, phone, role_id) values ("1below1@gmail.com", "Denis", "Below", "1below1", "12345qaz", "0671237733", 1);
+insert into file_sharing_system.user (email, login, firstName, lastName, password, phone, role_id) values ("user1@gmail.com", "user1", "User1firstname", "User2lastname", "12345qaz", "+1(111)-111-1111", 2);
+insert into file_sharing_system.user (email, login, firstName, lastName, password, phone, role_id) values ("user2@gmail.com", "user3", "User2firstname", "User2lastname", "12345qaz", "+2(222)-222-2222", 1);
+insert into file_sharing_system.user (email, login, firstName, lastName, password, phone, role_id) values ("user3@gmail.com", "user4", "User3firstname", "User2lastname", "12345qaz", "+2(222)-222-2222", 1);
 
 
 

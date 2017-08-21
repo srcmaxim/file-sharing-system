@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class Resource {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotNull(message = "error.resource.name.non-null")
+    @Size(min = 1, max = 30, message = "error.resource.name.size")
     private String name;
 
     @ManyToOne(cascade = CascadeType.PERSIST)

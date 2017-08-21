@@ -34,7 +34,7 @@ public class Folder extends Resource {
     }
 
     @Override
-    @Pattern(regexp = "\\p{Alpha}+(\\.\\p{Alpha}+|\\_\\p{Alpha}+|\\-\\p{Alpha}+)*",
+    @Pattern(regexp = "\\p{Alnum}+(\\.\\p{Alnum}+|\\_\\p{Alnum}+|\\-\\p{Alnum}+)*",
             message = "error.resource.name.non-valid")
     public String getName() {
         return super.getName();

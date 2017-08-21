@@ -42,10 +42,10 @@ public class User {
     @Pattern(regexp = "[\\p{Alpha}].*", message = "error.user.last-name.pattern")
     private String lastName;
     @NotNull(message = "error.user.email.non-null")
-    @Pattern(regexp = "[A-z0-9]+(\\-[A-z0-9]+|\\.[A-z0-9]+|\\_[A-z0-9]+)*@[A-z0-9]{2,}(\\.[A-z0-9]{2,})+",
+    @Pattern(regexp = "[A-z0-9]+(\\-[A-z0-9]+|\\.[A-z0-9]+|\\_[A-z0-9]+)*@[A-z0-9]{2,}(\\.[A-z]{2,})+",
             message = "error.user.email.non-valid")
     private String email;
-    @NotNull(message = "error.user.phone.size")
+    @NotNull(message = "error.user.phone.non-null")
     @Pattern(regexp = "\\+\\d\\(\\d{3}\\)\\-\\d{3}\\-\\d{4}",
             message = "error.user.phone.non-valid")
     private String phone;

@@ -30,8 +30,14 @@ public class ResourceRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
-    private String userLogin = "userLogin";
-    private String userPassword = "userPassword";
+    private static User getUser() {
+        User user = User.createNewUser("userLogin", "userPassword");
+        user.setFirstName("firstName");
+        user.setLastName("lastName");
+        user.setEmail("user_user-user.user@user.user");
+        user.setPhone("+3(099)-123-4567");
+        return user;
+    }
 
     @Test
     public void shouldFindAllImportedResources() {
@@ -42,7 +48,7 @@ public class ResourceRepositoryTest {
 
     @Test
     public void shouldFindCreatedResourcesForNewUser() {
-        User user = User.createNewUser(userLogin, userPassword);
+        User user = getUser();
         userRepository.save(user);
 
         user = userRepository.findOne(user.getId());
@@ -56,7 +62,7 @@ public class ResourceRepositoryTest {
 
     @Test
     public void shouldUpdateCreatedResourcesForNewUser() {
-        User user = User.createNewUser(userLogin, userPassword);
+        User user = getUser();
         user = userRepository.save(user);
         Folder audioFolder = getFolderByName(user, "audio");
         String songName = "Beatles - It's been a hard day night";
@@ -82,4 +88,4 @@ public class ResourceRepositoryTest {
         return folder;
     }
 
- }
+}

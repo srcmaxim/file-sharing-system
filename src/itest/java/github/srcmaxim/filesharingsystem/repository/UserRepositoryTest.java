@@ -24,10 +24,14 @@ public class UserRepositoryTest {
     @Autowired
     private UserRepository repository;
 
-    private String userLogin = "userLogin";
-    private String userPassword = "userPassword";
-    private String userEmail = "user-user.user@user.user";
-    private String userPhone = "+30991234567";
+    private static User getUser() {
+        User user = User.createNewUser("userLogin", "password");
+        user.setFirstName("firstName");
+        user.setLastName("lastName");
+        user.setEmail("user_user-user.user@user.user");
+        user.setPhone("+3(099)-123-4567");
+        return user;
+    }
 
     @Test
     public void shouldFindAllImportedUsers() {
@@ -38,34 +42,31 @@ public class UserRepositoryTest {
 
     @Test
     public void shouldFindCreatedUser() {
-        User user = User.createNewUser(userLogin, userPassword);
+        User user = getUser();
         repository.save(user);
 
         user = repository.findOne(user.getId());
 
         assertThat(user).isNotNull();
-        assertEquals(user.getLogin(), userLogin);
-        assertEquals(user.getPassword(), userPassword);
+        assertEquals(user.getLogin(), "userLogin");
+        assertEquals(user.getPassword(), "password");
     }
 
     @Test
     public void shouldUpdateCreatedUser() {
-        User user = User.createNewUser(userLogin, userPassword);
-        repository.save(user);
-        user.setEmail(userEmail);
-        user.setPhone(userPhone);
+        User user = getUser();
         repository.save(user);
 
         user = repository.findOne(user.getId());
 
         assertThat(user).isNotNull();
-        assertEquals(user.getEmail(), userEmail);
-        assertEquals(user.getPhone(), userPhone);
+        assertEquals(user.getEmail(), "user_user-user.user@user.user");
+        assertEquals(user.getPhone(), "+3(099)-123-4567");
     }
 
     @Test
     public void shouldDeleteCreatedUser() {
-        User user = User.createNewUser(userLogin, userPassword);
+        User user = getUser();
         repository.save(user);
         repository.delete(user.getId());
 

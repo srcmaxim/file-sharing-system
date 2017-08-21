@@ -5,7 +5,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,8 +21,6 @@ public class Resource {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotNull(message = "error.resource.name.non-null")
-    @Pattern(regexp = "\\p{Alpha}+(\\.\\p{Alpha}+|\\_\\p{Alpha}+|\\-\\p{Alpha}+)+",
-        message = "error.resource.name.non-valid")
     private String name;
 
     @ManyToOne(cascade = CascadeType.PERSIST)

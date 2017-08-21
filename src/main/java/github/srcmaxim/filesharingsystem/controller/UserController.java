@@ -21,46 +21,46 @@ public class UserController {
     }
 
     @RequestMapping(value = "")
-    public String shouldFindUsersView(Model model) {
+    public String findUsersView(Model model) {
         model.addAttribute("users", service.findUsers());
         return "users/findAll";
     }
 
     @RequestMapping(value = "/{id}")
-    public String shouldFindUserView(@PathVariable Long id, Model model) {
+    public String findUserView(@PathVariable Long id, Model model) {
         model.addAttribute("user", service.findUser(id));
         return "users/findOneOrDelete";
     }
 
     @RequestMapping(value = "/create")
-    public String shouldCreateUserView(Model model) {
+    public String createUserView(Model model) {
         model.addAttribute("user", new User());
         model.addAttribute("type", "create");
         return "users/createOrUpdate";
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public String shouldCreateUser(User user) {
+    public String createUser(User user) {
         service.saveUser(user);
         return "redirect:/users/" + user.getId();
     }
 
     @RequestMapping(value = "/{id}/edit")
-    public String shouldUpdateUserView(@PathVariable Long id, Model model) {
+    public String updateUserView(@PathVariable Long id, Model model) {
         model.addAttribute("user", service.findUser(id));
         model.addAttribute("type", "update");
         return "users/createOrUpdate";
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.POST)
-    public String shouldUpdateUser(@PathVariable Long id, User user) {
+    public String updateUser(@PathVariable Long id, User user) {
         user.setId(id);
         service.saveUser(user);
         return "redirect:/users/" + id;
     }
 
     @RequestMapping(value = "/{id}/delete")
-    public String shouldDeleteUserView(@PathVariable Long id, Model model) {
+    public String deleteUserView(@PathVariable Long id, Model model) {
         model.addAttribute("user", service.findUser(id));
         model.addAttribute("type", "delete");
         return "users/findOneOrDelete";

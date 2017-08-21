@@ -9,15 +9,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.validation.Validator;
+
 @Controller
 @RequestMapping("/users")
 public class UserController {
 
     private UserService service;
+    private Validator validator;
 
     @Autowired
-    public UserController(UserService service) {
+    public UserController(UserService service, Validator validator) {
         this.service = service;
+        this.validator = validator;
     }
 
     @RequestMapping(value = "")
@@ -67,7 +71,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/{id}/delete", method = RequestMethod.POST)
-    public String shouldDeleteUser(@PathVariable Long id) {
+    public String deleteUser(@PathVariable Long id) {
         service.deleteUser(id);
         return "redirect:/users";
     }

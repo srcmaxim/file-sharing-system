@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.validation.Validator;
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,10 +20,12 @@ import static java.util.stream.Collectors.toList;
 public class ResourceController {
 
     private ResourceService service;
+    private Validator validator;
 
     @Autowired
-    public ResourceController(ResourceService service) {
+    public ResourceController(ResourceService service, Validator validator) {
         this.service = service;
+        this.validator = validator;
     }
 
     @RequestMapping("")

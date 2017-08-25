@@ -16,7 +16,7 @@ import java.util.List;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type")
-public class Resource {
+public abstract class Resource {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -69,4 +69,9 @@ public class Resource {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
     }
+
+    public String getType() {
+        return getClass().getSimpleName().toLowerCase();
+    }
+
 }

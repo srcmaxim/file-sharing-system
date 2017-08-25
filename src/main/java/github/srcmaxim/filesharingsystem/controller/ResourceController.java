@@ -1,5 +1,6 @@
 package github.srcmaxim.filesharingsystem.controller;
 
+import github.srcmaxim.filesharingsystem.model.File;
 import github.srcmaxim.filesharingsystem.model.Resource;
 import github.srcmaxim.filesharingsystem.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Validator;
-import java.util.Arrays;
-import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 
 @Controller
 @RequestMapping("/resources")
@@ -42,16 +39,14 @@ public class ResourceController {
 
     @RequestMapping(value = "/create")
     public String createResourceView(Model model) {
-        model.addAttribute("resource", new Resource());
+        model.addAttribute("resource", new File());
         model.addAttribute("type", "create");
-        model.addAttribute("resourceUserIds", "");
         return "resources/createOrUpdate";
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public String createResource(Resource resource, Long parentId, String userIds, String type) {
-        List<Long> ids = Arrays.stream(userIds.split(", ")).map(Long::valueOf).collect(toList());
-        resource = service.saveResource(resource, parentId, ids, type);
+    public String createResource(Resource resource) {
+        resource = service.saveResource(resource);
         return "redirect:/resources/" + resource.getId();
     }
 
@@ -60,18 +55,13 @@ public class ResourceController {
         Resource resource = service.findResource(id);
         model.addAttribute("resource", resource);
         model.addAttribute("type", "update");
-        model.addAttribute("resourceUserIds", resource.getUsers()
-                .stream().map(u -> u.getId().toString())
-                        .reduce((a, b) -> a + ", " + b).get());
         return "resources/createOrUpdate";
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.POST)
-    public String updateResource(@PathVariable Long id, Resource resource, Long parentId, String userIds, String type) {
-        resource.setId(id);
-        List<Long> ids = Arrays.stream(userIds.split(", ")).map(Long::valueOf).collect(toList());
-        resource = service.saveResource(resource, parentId, ids, type);
-        return "redirect:/resources/" + id;
+    public String updateResource(Resource resource) {
+        resource = service.updateResource(resource);
+        return "redirect:/resources/" + resource.getId();
     }
 
     @RequestMapping(value = "/{id}/delete")

@@ -1,7 +1,6 @@
 package github.srcmaxim.filesharingsystem.controller;
 
 import github.srcmaxim.filesharingsystem.model.File;
-import github.srcmaxim.filesharingsystem.model.Folder;
 import github.srcmaxim.filesharingsystem.model.Resource;
 import github.srcmaxim.filesharingsystem.model.User;
 import github.srcmaxim.filesharingsystem.service.ResourceService;
@@ -20,7 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
@@ -89,7 +87,7 @@ public class ResourceControllerTest {
         mvc.perform(get("/resources/create"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("resources/createOrUpdate"))
-                .andExpect(model().attribute("resource", new Resource()))
+                .andExpect(model().attribute("resource", new File()))
                 .andExpect(model().attribute("type", is("create")));
 
         verify(resourceService, never()).findResource(null);
@@ -99,9 +97,8 @@ public class ResourceControllerTest {
     @Test
     public void shouldCreateResource() throws Exception {
         File resource = new File(1L, "name", null, null);
-        Folder parentFolder = new Folder(2L, null, null, null);
-        when(resourceService.saveResource(resource, 2L, asList(1L, 2L), "file"))
-                .thenReturn(new File(1L, "name", parentFolder, asList(user1, user2)));
+        when(resourceService.saveResource(resource))
+                .thenReturn(new File(1L, "name", null, null));
 
         mvc.perform(post("/resources")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -115,7 +112,7 @@ public class ResourceControllerTest {
                 .andExpect(redirectedUrl("/resources/1"));
 
         verify(resourceService, times(1))
-                .saveResource(resource, 2L, asList(1L, 2L), "file");
+                .saveResource(resource);
         verifyNoMoreInteractions(resourceService);
     }
 
@@ -149,7 +146,7 @@ public class ResourceControllerTest {
                 .andExpect(redirectedUrl("/resources/1"));
 
         verify(resourceService, times(1))
-                .saveResource(new File(1L, "name", null, null), 2L, asList(1L, 2L), "file");
+                .saveResource(new File(1L, "name", null, null));
         verifyNoMoreInteractions(resourceService);
     }
 

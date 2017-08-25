@@ -22,7 +22,7 @@ public class File extends Resource {
     }
 
     @Override
-    @Pattern(regexp = "\\p{Alnum}+(\\.\\p{Alnum}+|\\_\\p{Alnum}+|\\-\\p{Alnum}+)*\\.\\p{Alnum}",
+    @Pattern(regexp = "\\p{Alnum}+(\\.\\p{Alnum}+|\\_\\p{Alnum}+|\\-\\p{Alnum}+)*\\.\\p{Alnum}+",
             message = "error.resource.name.non-valid")
     public String getName() {
         return super.getName();

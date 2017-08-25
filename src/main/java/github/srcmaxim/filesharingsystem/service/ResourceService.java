@@ -2,6 +2,7 @@ package github.srcmaxim.filesharingsystem.service;
 
 import github.srcmaxim.filesharingsystem.model.Folder;
 import github.srcmaxim.filesharingsystem.model.Resource;
+import github.srcmaxim.filesharingsystem.model.User;
 import github.srcmaxim.filesharingsystem.repository.ResourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -86,6 +87,22 @@ public class ResourceService {
     @Transactional(Transactional.TxType.REQUIRED)
     public Resource removeParentFromResource(Resource resource) {
         resource.setParent(null);
+        return repository.save(resource);
+    }
+
+    @Transactional(Transactional.TxType.REQUIRED)
+    public Resource addUserToResource(Long id, Long userId) {
+        Resource resource = repository.findOne(id);
+        User user = userService.findUser(userId);
+        resource.getUsers().add(user);
+        return repository.save(resource);
+    }
+
+    @Transactional(Transactional.TxType.REQUIRED)
+    public Resource removeUserFromResource(Long id, Long userId) {
+        Resource resource = repository.findOne(id);
+        User user = userService.findUser(userId);
+        resource.getUsers().remove(user);
         return repository.save(resource);
     }
 

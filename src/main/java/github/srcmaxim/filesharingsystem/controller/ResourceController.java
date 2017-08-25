@@ -77,4 +77,16 @@ public class ResourceController {
         return "redirect:/resources";
     }
 
+    @RequestMapping(value = "/{id}/users", method = RequestMethod.POST)
+    public String addUserToResource(@PathVariable Long id, Long userId) {
+        Resource resource = service.addUserToResource(id, userId);
+        return "redirect:/resources/" + resource.getId();
+    }
+
+    @RequestMapping(value = "/{id}/users/{userId}/delete", method = RequestMethod.POST)
+    public String removeUserFromResource(@PathVariable Long id, @PathVariable Long userId) {
+        Resource resource = service.removeUserFromResource(id, userId);
+        return "redirect:/resources/" + resource.getId();
+    }
+
 }

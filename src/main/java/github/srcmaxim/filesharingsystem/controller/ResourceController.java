@@ -45,8 +45,8 @@ public class ResourceController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public String createResource(Resource resource) {
-        resource = service.saveResource(resource);
+    public String createResource(Resource resource, Long parentId) {
+        resource = service.saveResource(resource, parentId);
         return "redirect:/resources/" + resource.getId();
     }
 
@@ -59,8 +59,8 @@ public class ResourceController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.POST)
-    public String updateResource(Resource resource) {
-        resource = service.updateResource(resource);
+    public String updateResource(Resource resource, Long parentId) {
+        resource = service.updateResource(resource, parentId);
         return "redirect:/resources/" + resource.getId();
     }
 

@@ -48,6 +48,15 @@
                     </div>
                     <div class="col-sm-9" th:if="${type} == 'update'">
                         <span th:text="${resource.getType()}"/>
+                        <input class="form-control" placeholder="Parent" type="hidden" th:id="type" name="type"
+                               th:value="${resource.type}"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label" for="parentId">Parent</label>
+                    <div class="col-sm-9">
+                        <input class="form-control" placeholder="Parent" type="text" id="parentId" name="parentId"
+                               th:value="${resource.parent?.id}"/>
                     </div>
                 </div>
 

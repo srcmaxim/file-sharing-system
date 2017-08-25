@@ -1,5 +1,6 @@
 package github.srcmaxim.filesharingsystem.service;
 
+import github.srcmaxim.filesharingsystem.model.Folder;
 import github.srcmaxim.filesharingsystem.model.Resource;
 import github.srcmaxim.filesharingsystem.repository.ResourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,4 +53,40 @@ public class ResourceService {
         resource.setId(oldResource.getId());
         return resource;
     }
+
+    @Transactional(Transactional.TxType.REQUIRED)
+    public Resource saveResource(Resource resource, Long parentId) {
+        resource = saveResource(resource);
+        if (parentId != null && parentId != 0) {
+            addParentToResource(resource, parentId);
+        } else {
+            removeParentFromResource(resource);
+        }
+        return resource;
+    }
+
+    @Transactional(Transactional.TxType.REQUIRED)
+    public Resource updateResource(Resource resource, Long parentId) {
+        resource = updateResource(resource);
+        if (parentId != null && parentId != 0) {
+            addParentToResource(resource, parentId);
+        } else {
+            removeParentFromResource(resource);
+        }
+        return resource;
+    }
+
+    @Transactional(Transactional.TxType.REQUIRED)
+    public Resource addParentToResource(Resource resource, Long parentId) {
+        Folder parent = (Folder) repository.findOne(parentId);
+        resource.setParent(parent);
+        return repository.save(resource);
+    }
+
+    @Transactional(Transactional.TxType.REQUIRED)
+    public Resource removeParentFromResource(Resource resource) {
+        resource.setParent(null);
+        return repository.save(resource);
+    }
+
 }

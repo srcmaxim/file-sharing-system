@@ -33,9 +33,13 @@ public class ResourceMethodArgumentResolver implements HandlerMethodArgumentReso
         String name = webRequest.getParameter("name");
         Long idNumber = ("".equals(id)) ? null : Long.valueOf(id);
 
-        return ("file".equals(type))
-                ? new File(idNumber, name, null, null)
-                : new Folder(idNumber, name, null, null);
+        if ("file".equals(type)) {
+            return new File(idNumber, name, null, null);
+        } else if ("folder".equals(type)) {
+            return new Folder(idNumber, name, null, null);
+        } else {
+            throw new IllegalArgumentException("Type must be file or folder in " + getClass().getSimpleName());
+        }
     }
 
 }

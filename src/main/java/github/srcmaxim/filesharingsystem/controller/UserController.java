@@ -1,6 +1,7 @@
 package github.srcmaxim.filesharingsystem.controller;
 
 import github.srcmaxim.filesharingsystem.model.User;
+import github.srcmaxim.filesharingsystem.service.ResourceService;
 import github.srcmaxim.filesharingsystem.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,24 +16,26 @@ import javax.validation.Validator;
 @RequestMapping("/users")
 public class UserController {
 
-    private UserService service;
+    private UserService userService;
+    private ResourceService resourceService;
     private Validator validator;
 
     @Autowired
-    public UserController(UserService service, Validator validator) {
-        this.service = service;
+    public UserController(UserService service, ResourceService resourceService, Validator validator) {
+        this.userService = service;
+        this.resourceService = resourceService;
         this.validator = validator;
     }
 
     @RequestMapping(value = "")
     public String findUsersView(Model model) {
-        model.addAttribute("users", service.findUsers());
+        model.addAttribute("users", userService.findUsers());
         return "users/findAll";
     }
 
     @RequestMapping(value = "/{id}")
     public String findUserView(@PathVariable Long id, Model model) {
-        model.addAttribute("user", service.findUser(id));
+        model.addAttribute("user", userService.findUser(id));
         return "users/findOneOrDelete";
     }
 
@@ -45,35 +48,47 @@ public class UserController {
 
     @RequestMapping(value = "", method = RequestMethod.POST)
     public String createUser(User user) {
-        service.saveUser(user);
+        userService.saveUser(user);
         return "redirect:/users/" + user.getId();
     }
 
     @RequestMapping(value = "/{id}/edit")
     public String updateUserView(@PathVariable Long id, Model model) {
-        model.addAttribute("user", service.findUser(id));
+        model.addAttribute("user", userService.findUser(id));
         model.addAttribute("type", "update");
         return "users/createOrUpdate";
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.POST)
     public String updateUser(User user) {
-        user = service.updateUser(user);
+        user = userService.updateUser(user);
         System.out.println(user);
         return "redirect:/users/" + user.getId();
     }
 
     @RequestMapping(value = "/{id}/delete")
     public String deleteUserView(@PathVariable Long id, Model model) {
-        model.addAttribute("user", service.findUser(id));
+        model.addAttribute("user", userService.findUser(id));
         model.addAttribute("type", "delete");
         return "users/findOneOrDelete";
     }
 
     @RequestMapping(value = "/{id}/delete", method = RequestMethod.POST)
     public String deleteUser(@PathVariable Long id) {
-        service.deleteUser(id);
+        userService.deleteUser(id);
         return "redirect:/users";
+    }
+
+    @RequestMapping(value = "/{id}/resources", method = RequestMethod.POST)
+    public String addUserToResource(@PathVariable Long id, Long resourceId) {
+        resourceService.addUserToResource(resourceId, id);
+        return "redirect:/users/" + id;
+    }
+
+    @RequestMapping(value = "/{id}/resources/{resourceId}/delete", method = RequestMethod.POST)
+    public String removeUserFromResource(@PathVariable Long id, @PathVariable Long resourceId) {
+        resourceService.removeUserFromResource(resourceId, id);
+        return "redirect:/users/" + id;
     }
 
 }

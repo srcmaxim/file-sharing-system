@@ -19,7 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -131,22 +130,20 @@ public class ResourceControllerTest {
 
     @Test
     public void shouldUpdateResource() throws Exception {
-        when(resourceService.findResource(2L)).thenReturn(resource2);
-        when(userService.findUsers(asList(1L))).thenReturn(asList(user1));
+        when(resourceService.updateResource(new File(1L, "name", null, null)))
+                .thenReturn(new File(1L, "name", null, null));
 
         mvc.perform(post("/resources/{id}", 1L)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("id", "1")
                 .param("name", "name")
-                .param("parentId", "2")
-                .param("userIds", "1, 2")
                 .param("type", "file")
         )
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl("/resources/1"));
 
         verify(resourceService, times(1))
-                .saveResource(new File(1L, "name", null, null));
+                .updateResource(new File(1L, "name", null, null));
         verifyNoMoreInteractions(resourceService);
     }
 

@@ -57,10 +57,10 @@ public class UserController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.POST)
-    public String updateUser(@PathVariable Long id, User user) {
-        user.setId(id);
-        service.saveUser(user);
-        return "redirect:/users/" + id;
+    public String updateUser(User user) {
+        user = service.updateUser(user);
+        System.out.println(user);
+        return "redirect:/users/" + user.getId();
     }
 
     @RequestMapping(value = "/{id}/delete")

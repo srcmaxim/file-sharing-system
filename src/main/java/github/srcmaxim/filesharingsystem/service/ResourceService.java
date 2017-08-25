@@ -48,6 +48,8 @@ public class ResourceService {
     public Resource updateResource(Resource resource) {
         Resource oldResource = repository.findOne(resource.getId());
         oldResource.setName(resource.getName());
+        repository.save(oldResource);
+        resource.setId(oldResource.getId());
         return resource;
     }
 }

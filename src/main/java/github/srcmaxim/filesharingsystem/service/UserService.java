@@ -37,7 +37,17 @@ public class UserService {
         return user;
     }
 
-    public List<User> findUsers(Iterable<Long> ids) {
-        return repository.findAll(ids);
+    public User updateUser(User user) {
+        User oldUser = repository.findOne(user.getId());
+        oldUser.setLogin(user.getLogin());
+        oldUser.setPassword(user.getPassword());
+        oldUser.setFirstName(user.getFirstName());
+        oldUser.setLastName(user.getLastName());
+        oldUser.setEmail(user.getEmail());
+        oldUser.setPhone(user.getPhone());
+        repository.save(oldUser);
+        user.setId(oldUser.getId());
+        return user;
     }
+
 }

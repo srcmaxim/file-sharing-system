@@ -125,6 +125,16 @@ public class UserControllerTest {
 
     @Test
     public void shouldUpdateUser() throws Exception {
+        when( userService.updateUser(new User(1L,
+                "login", "password",
+                "firstName", "lastName",
+                "email", "phone",
+                null, null))).thenReturn(new User(1L,
+                "login", "password",
+                "firstName", "lastName",
+                "email", "phone",
+                null, null));
+
         mvc.perform(post("/users/{id}", 1L)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("id", "1")
@@ -139,7 +149,7 @@ public class UserControllerTest {
                 .andExpect(redirectedUrl("/users/1"));
 
         verify(userService, times(1))
-                .saveUser(new User(1L,
+                .updateUser(new User(1L,
                         "login", "password",
                         "firstName", "lastName",
                         "email", "phone",

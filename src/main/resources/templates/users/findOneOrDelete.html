@@ -1,5 +1,6 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
+    <link rel="icon" type="image/png" th:href="@{/static/img/frog-icon-24.png}" />
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/css/bootstrap.min.css"
           rel="stylesheet" media="screen" th:href="@{/static/css/bootstrap.min.css}"/>
@@ -16,7 +17,6 @@
             <h1 th:if="${type} != 'delete'">User</h1>
             <h1 th:if="${type} == 'delete'">Delete user</h1>
             <br/>
-            <h3><a th:href="@{~/users}">Users</a></h3>
         </div>
     </div>
     <div class="row">
@@ -38,7 +38,7 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <td th:text="${user.id}">id</td>
+                    <td><a th:href="@{'~/users/' + ${user.id}}" th:text="${user.id}">id</a></td>
                     <td th:text="${user.login}">login</td>
                     <td th:text="${user.password}">password</td>
                     <td th:text="${user.firstName}">firstName</td>
@@ -46,12 +46,12 @@
                     <td th:text="${user.email}">email</td>
                     <td th:text="${user.phone}">phone</td>
 
-                    <td><a th:href="@{'~/users/' + ${user.id} + '/edit'}">edit</a></td>
-                    <td><a th:href="@{'~/users/' + ${user.id} + '/delete'}">delete</a></td>
+                    <td><a class="btn btn-sm btn-success" th:href="@{'~/users/' + ${user.id} + '/edit'}">edit</a></td>
+                    <td><a class="btn btn-sm btn-danger" th:href="@{'~/users/' + ${user.id} + '/delete'}">delete</a></td>
                 </tr>
                 </tbody>
             </table>
-            <h3><a th:href="@{~/resources}">Resources</a></h3>
+            <h3>Resources of current user</h3>
             <table class="table">
                 <thead>
                 <tr>

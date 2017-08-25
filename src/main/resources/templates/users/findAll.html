@@ -1,5 +1,6 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
+    <link rel="icon" type="image/png" th:href="@{/static/img/frog-icon-24.png}" />
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/css/bootstrap.min.css"
           rel="stylesheet" media="screen" th:href="@{/static/css/bootstrap.min.css}"/>
@@ -15,7 +16,7 @@
         <div class="col-md-12">
             <h1>Users</h1>
             <br/>
-            <h3><a th:href="@{~/users/create}">Create user</a></h3>
+            <h3><a class="btn btn-primary" th:href="@{~/users/create}">Create user</a></h3>
         </div>
     </div>
     <div class="row">
@@ -45,8 +46,8 @@
                     <td th:text="${user.email}">email</td>
                     <td th:text="${user.phone}">phone</td>
 
-                    <td><a th:href="@{'~/users/' + ${user.id} + '/edit'}">edit</a></td>
-                    <td><a th:href="@{'~/users/' + ${user.id} + '/delete'}">delete</a></td>
+                    <td><a class="btn btn-sm btn-success" th:href="@{'~/users/' + ${user.id} + '/edit'}">edit</a></td>
+                    <td><a class="btn btn-sm btn-danger" th:href="@{'~/users/' + ${user.id} + '/delete'}">delete</a></td>
                 </tr>
                 </tbody>
             </table>

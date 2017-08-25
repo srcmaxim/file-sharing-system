@@ -1,5 +1,6 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
+    <link rel="icon" type="image/png" th:href="@{/static/img/frog-icon-24.png}" />
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/css/bootstrap.min.css"
           rel="stylesheet" media="screen" th:href="@{/static/css/bootstrap.min.css}"/>
@@ -16,30 +17,62 @@
             <h1 th:if="${type} == 'create'">Create user</h1>
             <h1 th:if="${type} == 'update'">Edit user</h1>
             <br/>
-            <h3><a th:href="@{~/users}">Users</a></h3>
         </div>
     </div>
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-8 mx-auto">
             <form th:action="@{${user.id}? '~/users/' + ${user.id}: '~/users/'}" method="post">
-                <fieldset>
-                    <label for="id">id</label>
-                    <input type="number" id="id" name="id" th:value="${user.id}"/>
-                    <label for="login">login</label>
-                    <input type="text" id="login" name="login" th:value="${user.login}"/>
-                    <label for="password">password</label>
-                    <input type="text" id="password" name="password" th:value="${user.password}"/>
-                    <label for="firstName">firstName</label>
-                    <input type="text" id="firstName" name="firstName" th:value="${user.firstName}"/>
-                    <label for="lastName">lastName</label>
-                    <input type="text" id="lastName" name="lastName" th:value="${user.lastName}"/>
-                    <label for="email">email</label>
-                    <input type="text" id="email" name="email" th:value="${user.email}"/>
-                    <label for="phone">phone</label>
-                    <input type="text" id="phone" name="phone" th:value="${user.phone}"/>
-                    <input th:if="${type} == 'create'" type="submit" value="Create user"/>
-                    <input th:if="${type} == 'update'" type="submit" value="Edit user"/>
-                </fieldset>
+
+                <div class="form-group row">
+                    <label class="col-sm-3  col-form-label" for="id">Id</label>
+                    <div class="col-sm-9">
+                        <input class="form-control" placeholder="Id" type="number" id="id" name="id" th:value="${user.id}"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3  col-form-label" for="login">Login</label>
+                    <div class="col-sm-9">
+                        <input class="form-control" placeholder="Login" type="text" id="login" name="login" th:value="${user.login}"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3  col-form-label" for="password">Password</label>
+                    <div class="col-sm-9">
+                        <input class="form-control" placeholder="Password" type="text" id="password" name="password" th:value="${user.password}"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3  col-form-label" for="firstName">First name</label>
+                    <div class="col-sm-9">
+                        <input class="form-control" placeholder="First name" type="text" id="firstName" name="firstName" th:value="${user.firstName}"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3  col-form-label" for="lastName">Last name</label>
+                    <div class="col-sm-9">
+                        <input class="form-control" placeholder="Last name" type="text" id="lastName" name="lastName" th:value="${user.lastName}"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3  col-form-label" for="email">Email</label>
+                    <div class="col-sm-9">
+                        <input class="form-control" placeholder="Email" type="text" id="email" name="email" th:value="${user.email}"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3  col-form-label" for="phone">Phone</label>
+                    <div class="col-sm-9">
+                        <input class="form-control" placeholder="Phone in format +X(XXX)-XXX-XXXX" type="text" id="phone" name="phone" th:value="${user.phone}"/>
+                    </div>
+                </div>
+
+
+                <div class="form-group row">
+                    <div class="col-sm-9">
+                        <input class="btn btn-primary" th:if="${type} == 'create'" type="submit" value="Create user"/>
+                        <input class="btn btn-primary" th:if="${type} == 'update'" type="submit" value="Edit user"/>
+                    </div>
+                </div>
             </form>
         </div>
     </div>

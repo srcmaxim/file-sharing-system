@@ -24,12 +24,12 @@
     </appender>
 
     <!-- Send logs to both console and file audit -->
-    <logger name="github.srcmaxim.filesharingsystem" level="error" additivity="false">
+    <logger name="github.srcmaxim.filesharingsystem" level="debug" additivity="false">
         <appender-ref ref="FILE"/>
         <appender-ref ref="STDOUT"/>
     </logger>
 
-    <logger name="org.springframework" level="debug" additivity="false">
+    <logger name="org.springframework" level="error" additivity="false">
         <appender-ref ref="FILE"/>
         <appender-ref ref="STDOUT"/>
     </logger>
@@ -39,7 +39,7 @@
         <appender-ref ref="STDOUT"/>
     </logger>
 
-    <root level="debug">
+    <root level="error">
         <appender-ref ref="FILE"/>
         <appender-ref ref="STDOUT"/>
     </root>

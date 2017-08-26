@@ -4,6 +4,7 @@ import github.srcmaxim.filesharingsystem.model.Folder;
 import github.srcmaxim.filesharingsystem.model.Resource;
 import github.srcmaxim.filesharingsystem.model.User;
 import github.srcmaxim.filesharingsystem.repository.ResourceRepository;
+import github.srcmaxim.filesharingsystem.system.log.Loggable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
+@Loggable
 public class ResourceService {
 
     private ResourceRepository repository;

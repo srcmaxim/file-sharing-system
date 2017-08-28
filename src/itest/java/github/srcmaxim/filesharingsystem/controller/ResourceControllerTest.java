@@ -7,6 +7,7 @@ import github.srcmaxim.filesharingsystem.service.ResourceService;
 import github.srcmaxim.filesharingsystem.service.UserService;
 import github.srcmaxim.filesharingsystem.system.DbConfig;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -21,6 +23,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -39,10 +42,17 @@ public class ResourceControllerTest {
     @MockBean
     private UserService userService;
 
-    User user1;
-    User user2;
-    List<Resource> resources1;
-    Resource resource2;
+    private User user1;
+    private User user2;
+    private List<Resource> resources;
+    private Resource resource;
+
+    private static MockHttpSession session;
+
+    @BeforeClass
+    public static void setupSession() {
+        session = new CustomHttpSession("user1", "12345qaz", "ROLE_ADMIN");
+    }
 
     @Before
     public void setup() {
@@ -50,19 +60,19 @@ public class ResourceControllerTest {
         user1.setId(1L);
         user2 = User.createNewUser("John", "p2");
         user2.setId(2L);
-        resources1 = user1.getResources();
-        resource2 = resources1.get(0);
+        resources = user1.getResources();
+        resource = resources.get(0);
     }
 
     @Test
     public void shouldFindResourcesView() throws Exception {
-        when(resourceService.findResources()).thenReturn(resources1);
+        when(resourceService.findResources()).thenReturn(resources);
 
-        mvc.perform(get("/resources"))
+        mvc.perform(get("/resources").session(session))
                 .andExpect(status().isOk())
                 .andExpect(view().name("resources/findAll"))
                 .andExpect(model().attribute("resources", hasSize(3)))
-                .andExpect(model().attribute("resources", resources1));
+                .andExpect(model().attribute("resources", resources));
 
         verify(resourceService, times(1)).findResources();
         verifyNoMoreInteractions(resourceService);
@@ -70,12 +80,12 @@ public class ResourceControllerTest {
 
     @Test
     public void shouldFindResourceView() throws Exception {
-        when(resourceService.findResource(1L)).thenReturn(resource2);
+        when(resourceService.findResource(1L)).thenReturn(resource);
 
-        mvc.perform(get("/resources/1"))
+        mvc.perform(get("/resources/1").session(session))
                 .andExpect(status().isOk())
                 .andExpect(view().name("resources/findOneOrDelete"))
-                .andExpect(model().attribute("resource", is(resource2)));
+                .andExpect(model().attribute("resource", is(resource)));
 
         verify(resourceService, times(1)).findResource(1L);
         verifyNoMoreInteractions(resourceService);
@@ -83,7 +93,7 @@ public class ResourceControllerTest {
 
     @Test
     public void shouldCreateResourceView() throws Exception {
-        mvc.perform(get("/resources/create"))
+        mvc.perform(get("/resources/create").session(session))
                 .andExpect(status().isOk())
                 .andExpect(view().name("resources/createOrUpdate"))
                 .andExpect(model().attribute("resource", new File()))
@@ -96,14 +106,13 @@ public class ResourceControllerTest {
     @Test
     public void shouldCreateResource() throws Exception {
         File resource = new File(1L, "name", null, null);
-        when(resourceService.saveResource(resource))
+        when(resourceService.saveResource(resource, null))
                 .thenReturn(new File(1L, "name", null, null));
 
-        mvc.perform(post("/resources")
+        mvc.perform(post("/resources").session(session).with(csrf())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("id", "1")
                 .param("name", "name")
-                .param("parentId", "2")
                 .param("userIds", "1, 2")
                 .param("type", "file")
         )
@@ -111,18 +120,18 @@ public class ResourceControllerTest {
                 .andExpect(redirectedUrl("/resources/1"));
 
         verify(resourceService, times(1))
-                .saveResource(resource);
+                .saveResource(resource, null);
         verifyNoMoreInteractions(resourceService);
     }
 
     public void shouldUpdateUserView() throws Exception {
-        when(resourceService.findResource(1L)).thenReturn(resource2);
+        when(resourceService.findResource(1L)).thenReturn(resource);
 
-        mvc.perform(get("/resources/{id}/edit", 1L)
+        mvc.perform(get("/resources/{id}/edit", 1L).session(session)
                 .accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
                 .andExpect(view().name("resources/createOrUpdate"))
-                .andExpect(model().attribute("resource", hasItem(resource2)))
+                .andExpect(model().attribute("resource", hasItem(resource)))
                 .andExpect(model().attribute("type", is("update")));
 
         verifyNoMoreInteractions(resourceService);
@@ -130,10 +139,10 @@ public class ResourceControllerTest {
 
     @Test
     public void shouldUpdateResource() throws Exception {
-        when(resourceService.updateResource(new File(1L, "name", null, null)))
+        when(resourceService.updateResource(new File(1L, "name", null, null), null))
                 .thenReturn(new File(1L, "name", null, null));
 
-        mvc.perform(post("/resources/{id}", 1L)
+        mvc.perform(post("/resources/{id}", 1L).session(session).with(csrf())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("id", "1")
                 .param("name", "name")
@@ -143,18 +152,18 @@ public class ResourceControllerTest {
                 .andExpect(redirectedUrl("/resources/1"));
 
         verify(resourceService, times(1))
-                .updateResource(new File(1L, "name", null, null));
+                .updateResource(new File(1L, "name", null, null), null);
         verifyNoMoreInteractions(resourceService);
     }
 
     @Test
     public void shouldDeleteResourceView() throws Exception {
-        when(resourceService.findResource(1L)).thenReturn(resource2);
+        when(resourceService.findResource(1L)).thenReturn(resource);
 
-        mvc.perform(get("/resources/{id}/delete", 1L))
+        mvc.perform(get("/resources/{id}/delete", 1L).session(session))
                 .andExpect(status().isOk())
                 .andExpect(view().name("resources/findOneOrDelete"))
-                .andExpect(model().attribute("resource", is(resource2)));
+                .andExpect(model().attribute("resource", is(resource)));
 
         verify(resourceService, times(1)).findResource(1L);
         verifyNoMoreInteractions(resourceService);
@@ -162,9 +171,9 @@ public class ResourceControllerTest {
 
     @Test
     public void shouldDeleteResource() throws Exception {
-        when(resourceService.findResource(1L)).thenReturn(resource2);
+        when(resourceService.findResource(1L)).thenReturn(resource);
 
-        mvc.perform(post("/resources/{id}/delete", 1L))
+        mvc.perform(post("/resources/{id}/delete", 1L).session(session).with(csrf()))
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl("/resources"));
 

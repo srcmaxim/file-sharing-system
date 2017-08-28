@@ -20,6 +20,11 @@ import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(name = "login", columnNames = "login"),
+        @UniqueConstraint(name = "email", columnNames = "email"),
+        @UniqueConstraint(name = "phone", columnNames = "phone")
+})
 public class User {
 
     @Id
@@ -50,21 +55,24 @@ public class User {
             message = "error.user.phone.non-valid")
     private String phone;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST})
-    private Role role;
+    @ManyToMany(cascade=CascadeType.ALL)
+    @JoinTable(name="user_authority",
+            joinColumns = {@JoinColumn(name="user_id", referencedColumnName="id")},
+            inverseJoinColumns = {@JoinColumn(name="authority_id", referencedColumnName="id")})
+    private List<Authority> authorities = new ArrayList<>();
 
     @JsonIgnoreProperties("users")
     @ManyToMany(mappedBy = "users", cascade = {CascadeType.PERSIST})
     private List<Resource> resources = new ArrayList<>();
 
-    public User(String login, String password, Role role) {
+    public User(String login, String password, List<Authority> authorities) {
         this.login = login;
         this.password = password;
-        this.role = role;
+        this.authorities = authorities;
     }
 
     public static User createNewUser(String login, String password) {
-        User user = new User(login, password, new Role(null , Role.ROLE_USER));
+        User user = new User(login, password, asList(new Authority(null , Authority.ROLE_USER)));
         List<User> userList = asList(user);
         user.getResources().add(new Folder("audio", null, userList));
         user.getResources().add(new Folder("video", null, userList));

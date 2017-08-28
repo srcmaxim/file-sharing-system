@@ -1,6 +1,5 @@
 package github.srcmaxim.filesharingsystem.repository;
 
-import github.srcmaxim.filesharingsystem.model.File;
 import github.srcmaxim.filesharingsystem.model.Folder;
 import github.srcmaxim.filesharingsystem.model.Resource;
 import github.srcmaxim.filesharingsystem.model.User;
@@ -17,7 +16,6 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -58,23 +56,6 @@ public class ResourceRepositoryTest {
         Object[] resourceNames = user.getResources().stream()
                 .map(Resource::getName).toArray();
         assertThat(resourceNames).containsAll(asList("audio", "video", "image"));
-    }
-
-    @Test
-    public void shouldUpdateCreatedResourcesForNewUser() {
-        User user = getUser();
-        user = userRepository.save(user);
-        Folder audioFolder = getFolderByName(user, "audio");
-        String songName = "Beatles - It's been a hard day night";
-        audioFolder.getResources().add(
-                new File(songName, audioFolder, asList(user)));
-
-        userRepository.save(user);
-        user = userRepository.findOne(user.getId());
-
-        audioFolder = getFolderByName(user, "audio");
-        File audio = (File) audioFolder.getResources().get(0);
-        assertEquals(audio.getName(), songName);
     }
 
     private Folder getFolderByName(User user, String name) {

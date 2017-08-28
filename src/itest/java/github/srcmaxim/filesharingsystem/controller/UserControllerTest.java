@@ -4,6 +4,7 @@ import github.srcmaxim.filesharingsystem.model.User;
 import github.srcmaxim.filesharingsystem.service.UserService;
 import github.srcmaxim.filesharingsystem.system.DbConfig;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -19,6 +21,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -35,8 +38,14 @@ public class UserControllerTest {
     @MockBean
     private UserService userService;
 
-    List<User> users;
-    User user;
+    private List<User> users;
+    private User user;
+    private static MockHttpSession session;
+
+    @BeforeClass
+    public static void setupSession() {
+        session = new CustomHttpSession("user1", "12345qaz", "ROLE_USER");
+    }
 
     @Before
     public void setup() {
@@ -51,7 +60,7 @@ public class UserControllerTest {
     public void shouldFindUsersView() throws Exception {
         when(userService.findUsers()).thenReturn(users);
 
-        mvc.perform(get("/users"))
+        mvc.perform(get("/users").session(session))
                 .andExpect(status().isOk())
                 .andExpect(view().name("users/findAll"))
                 .andExpect(model().attribute("users", hasSize(2)))
@@ -65,7 +74,7 @@ public class UserControllerTest {
     public void shouldFindUserView() throws Exception {
         when(userService.findUser(1L)).thenReturn(user);
 
-        mvc.perform(get("/users/1"))
+        mvc.perform(get("/users/1").session(session))
                 .andExpect(status().isOk())
                 .andExpect(view().name("users/findOneOrDelete"))
                 .andExpect(model().attribute("user", is(user)));
@@ -76,7 +85,7 @@ public class UserControllerTest {
 
     @Test
     public void shouldCreateUserView() throws Exception {
-        mvc.perform(get("/users/create"))
+        mvc.perform(get("/users/create").session(session))
                 .andExpect(status().isOk())
                 .andExpect(view().name("users/createOrUpdate"))
                 .andExpect(model().attribute("user", new User()))
@@ -88,7 +97,7 @@ public class UserControllerTest {
 
     @Test
     public void shouldCreateUser() throws Exception {
-        mvc.perform(post("/users")
+        mvc.perform(post("/users").session(session).with(csrf())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("id", "1")
                 .param("login", "login")
@@ -113,7 +122,7 @@ public class UserControllerTest {
     public void shouldUpdateUserView() throws Exception {
         when(userService.findUser(1L)).thenReturn(user);
 
-        mvc.perform(get("/users/{id}/edit", 1L)
+        mvc.perform(get("/users/{id}/edit", 1L).session(session)
                 .accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
                 .andExpect(view().name("users/createOrUpdate"))
@@ -135,7 +144,7 @@ public class UserControllerTest {
                 "email", "phone",
                 null, null));
 
-        mvc.perform(post("/users/{id}", 1L)
+        mvc.perform(post("/users/{id}", 1L).session(session).with(csrf())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("id", "1")
                 .param("login", "login")
@@ -161,7 +170,7 @@ public class UserControllerTest {
     public void shouldDeleteUserView() throws Exception {
         when(userService.findUser(1L)).thenReturn(user);
 
-        mvc.perform(get("/users/{id}/delete", 1L))
+        mvc.perform(get("/users/{id}/delete", 1L).session(session))
                 .andExpect(status().isOk())
                 .andExpect(view().name("users/findOneOrDelete"))
                 .andExpect(model().attribute("user", is(user)));
@@ -174,7 +183,7 @@ public class UserControllerTest {
     public void shouldDeleteUser() throws Exception {
         when(userService.findUser(1L)).thenReturn(user);
 
-        mvc.perform(post("/users/{id}/delete", 1L))
+        mvc.perform(post("/users/{id}/delete", 1L).session(session).with(csrf()))
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl("/users"));
 

@@ -22,7 +22,6 @@ repositories {
 	mavenCentral()
 }
 
-
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.springframework.boot:spring-boot-starter-web')
@@ -58,6 +57,7 @@ sourceSets {
 task itest(type: Test) {
 	testClassesDir = sourceSets.itest.output.classesDir
 	classpath = sourceSets.itest.runtimeClasspath
+	environment SPRING_PROFILES_ACTIVE: "test"
 	testLogging {
 		events "passed", "skipped", "failed"
 	}

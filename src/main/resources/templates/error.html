@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Error page</title>
     <link rel="icon" type="image/png" th:href="@{/static/img/frog-icon-24.png}" />
@@ -18,7 +18,7 @@
             <h1><span th:text="${error}"/></h1>
             <h3 th:text="${status} + ': ' + ${message}"/>
             <br/>
-            <p>Exception: <b th:text="${exception?.substring(exception?.lastIndexOf('.') + 1)}"/> at time: <b th:text="${T(java.time.LocalDateTime).now()}"/></p>
+            <p>Exception: <b th:text="${exception}"/> at time: <b th:text="${T(java.time.LocalDateTime).now()}"/></p>
 
             <a href="#" th:href="@{/}">Back to Home Page</a>
         </div>

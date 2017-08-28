@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <link rel="icon" type="image/png" th:href="@{/static/img/frog-icon-24.png}" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/css/bootstrap.min.css"
@@ -30,9 +32,12 @@
                     <a class="nav-link" href="#" th:href="@{/resources}">Resources</a>
                 </li>
             </ul>
-            <div class="btn-group" role="group" aria-label="Basic example">
-                <a class="btn btn-outline-success" href="#" th:href="@{/login}" role="button">Login</a>
-                <a class="btn btn-outline-success" href="#" th:href="@{/register}" role="button">Register</a>
+
+
+            <div class="btn-group" authorities="group" aria-label="Basic example">
+                <a sec:authorize="isAnonymous()" class="btn btn-outline-success" href="#" th:href="@{/login}" authorities="button">Login</a>
+                <a sec:authorize="isAnonymous()" class="btn btn-outline-success" href="#" th:href="@{/register}" authorities="button">Register</a>
+                <a sec:authorize="isAuthenticated()" class="btn btn-outline-success" href="#" th:href="@{/logout}" authorities="button">Logout</a>
             </div>
         </div>
     </nav>

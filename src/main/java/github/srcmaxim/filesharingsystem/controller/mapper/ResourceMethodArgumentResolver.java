@@ -17,7 +17,7 @@ public class ResourceMethodArgumentResolver implements HandlerMethodArgumentReso
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType().equals(Resource.class);
+        return parameter.getParameterType() == Resource.class;
     }
 
     @Override

@@ -14,7 +14,7 @@ import static org.mockito.Mockito.when;
 
 public class ResourceServiceTest {
 
-    private ResourceService service = new ResourceService();
+    private ResourceService service;
     private ResourceRepository repository;
     private User user = User.createNewUser("jack", "p1");
     private List<Resource> resourceList = user.getResources();
@@ -22,7 +22,7 @@ public class ResourceServiceTest {
     @Before
     public void init() throws Exception {
         repository = mock(ResourceRepository.class);
-        service.setRepository(repository);
+        service = new ResourceService(repository, null);
     }
 
     @Test

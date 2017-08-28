@@ -1,8 +1,13 @@
 package github.srcmaxim.filesharingsystem.controller;
 
+import github.srcmaxim.filesharingsystem.model.File;
 import github.srcmaxim.filesharingsystem.model.Resource;
+import github.srcmaxim.filesharingsystem.model.User;
 import github.srcmaxim.filesharingsystem.service.ResourceService;
-import github.srcmaxim.filesharingsystem.system.Config;
+import github.srcmaxim.filesharingsystem.service.UserService;
+import github.srcmaxim.filesharingsystem.system.DbConfig;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,21 +15,23 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static java.util.Arrays.asList;
-import static org.mockito.Matchers.eq;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(ResourceController.class)
-@Import(Config.class)
+@Import(DbConfig.class)
 public class ResourceControllerTest {
 
     @Autowired
@@ -32,65 +39,146 @@ public class ResourceControllerTest {
 
     @MockBean
     private ResourceService resourceService;
+    @MockBean
+    private UserService userService;
 
-    List<Resource> resources = asList(
-            new Resource("audio", null, null),
-            new Resource("video", null, null),
-            new Resource("image", null, null)
-    );
-    Resource resouce = resources.get(0);
+    private User user1;
+    private User user2;
+    private List<Resource> resources;
+    private Resource resource;
+
+    private static MockHttpSession session;
+
+    @BeforeClass
+    public static void setupSession() {
+        session = new CustomHttpSession("user1", "12345qaz", "ROLE_ADMIN");
+    }
+
+    @Before
+    public void setup() {
+        user1 = User.createNewUser("Jack", "p1");
+        user1.setId(1L);
+        user2 = User.createNewUser("John", "p2");
+        user2.setId(2L);
+        resources = user1.getResources();
+        resource = resources.get(0);
+    }
 
     @Test
-    public void findResources() throws Exception {
+    public void shouldFindResourcesView() throws Exception {
         when(resourceService.findResources()).thenReturn(resources);
-        mvc.perform(get("/resources")
-                .accept(MediaType.APPLICATION_JSON))
+
+        mvc.perform(get("/resources").session(session))
                 .andExpect(status().isOk())
-                .andExpect(content().json("[" +
-                        "  {\"name\": \"audio\"}," +
-                        "  {\"name\": \"video\"}," +
-                        "  {\"name\": \"image\"}" +
-                        "]"));
+                .andExpect(view().name("resources/findAll"))
+                .andExpect(model().attribute("resources", hasSize(3)))
+                .andExpect(model().attribute("resources", resources));
+
         verify(resourceService, times(1)).findResources();
         verifyNoMoreInteractions(resourceService);
     }
 
     @Test
-    public void findResource() throws Exception {
-        when(resourceService.findResource(1L))
-                .thenReturn(resouce);
-        mvc.perform(get("/resources/1")
-                .accept(MediaType.APPLICATION_JSON))
+    public void shouldFindResourceView() throws Exception {
+        when(resourceService.findResource(1L)).thenReturn(resource);
+
+        mvc.perform(get("/resources/1").session(session))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"name\": \"audio\"}"));
+                .andExpect(view().name("resources/findOneOrDelete"))
+                .andExpect(model().attribute("resource", is(resource)));
+
         verify(resourceService, times(1)).findResource(1L);
         verifyNoMoreInteractions(resourceService);
     }
 
     @Test
-    public void createResource() throws Exception {
-        mvc.perform(post("/resources")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\": \"audio\"}"))
-                .andExpect(status().isOk());
-        verify(resourceService).saveResource(eq(resouce));
+    public void shouldCreateResourceView() throws Exception {
+        mvc.perform(get("/resources/create").session(session))
+                .andExpect(status().isOk())
+                .andExpect(view().name("resources/createOrUpdate"))
+                .andExpect(model().attribute("resource", new File()))
+                .andExpect(model().attribute("type", is("create")));
+
+        verify(resourceService, never()).findResource(null);
+        verifyNoMoreInteractions(resourceService);
     }
 
     @Test
-    public void updateResource() throws Exception {
-        mvc.perform(put("/resources/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\": \"audio\"}"))
-                .andExpect(status().isOk());
-        verify(resourceService).saveResource(eq(resouce));
+    public void shouldCreateResource() throws Exception {
+        File resource = new File(1L, "name", null, null);
+        when(resourceService.saveResource(resource, null))
+                .thenReturn(new File(1L, "name", null, null));
+
+        mvc.perform(post("/resources").session(session).with(csrf())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id", "1")
+                .param("name", "name")
+                .param("userIds", "1, 2")
+                .param("type", "file")
+        )
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/resources/1"));
+
+        verify(resourceService, times(1))
+                .saveResource(resource, null);
+        verifyNoMoreInteractions(resourceService);
+    }
+
+    public void shouldUpdateUserView() throws Exception {
+        when(resourceService.findResource(1L)).thenReturn(resource);
+
+        mvc.perform(get("/resources/{id}/edit", 1L).session(session)
+                .accept(MediaType.TEXT_HTML))
+                .andExpect(status().isOk())
+                .andExpect(view().name("resources/createOrUpdate"))
+                .andExpect(model().attribute("resource", hasItem(resource)))
+                .andExpect(model().attribute("type", is("update")));
+
+        verifyNoMoreInteractions(resourceService);
     }
 
     @Test
-    public void deleteResource() throws Exception {
-        mvc.perform(delete("/resources/1")
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-        verify(resourceService).deleteResource(eq(1L));
+    public void shouldUpdateResource() throws Exception {
+        when(resourceService.updateResource(new File(1L, "name", null, null), null))
+                .thenReturn(new File(1L, "name", null, null));
+
+        mvc.perform(post("/resources/{id}", 1L).session(session).with(csrf())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id", "1")
+                .param("name", "name")
+                .param("type", "file")
+        )
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/resources/1"));
+
+        verify(resourceService, times(1))
+                .updateResource(new File(1L, "name", null, null), null);
+        verifyNoMoreInteractions(resourceService);
+    }
+
+    @Test
+    public void shouldDeleteResourceView() throws Exception {
+        when(resourceService.findResource(1L)).thenReturn(resource);
+
+        mvc.perform(get("/resources/{id}/delete", 1L).session(session))
+                .andExpect(status().isOk())
+                .andExpect(view().name("resources/findOneOrDelete"))
+                .andExpect(model().attribute("resource", is(resource)));
+
+        verify(resourceService, times(1)).findResource(1L);
+        verifyNoMoreInteractions(resourceService);
+    }
+
+    @Test
+    public void shouldDeleteResource() throws Exception {
+        when(resourceService.findResource(1L)).thenReturn(resource);
+
+        mvc.perform(post("/resources/{id}/delete", 1L).session(session).with(csrf()))
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/resources"));
+
+        verify(resourceService, times(1)).deleteResource(1L);
+        verifyNoMoreInteractions(resourceService);
     }
 
 }

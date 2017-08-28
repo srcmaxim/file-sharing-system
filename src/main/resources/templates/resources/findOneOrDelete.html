@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="icon" type="image/png" th:href="@{/static/img/frog-icon-24.png}"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/css/bootstrap.min.css"
+          rel="stylesheet" media="screen" th:href="@{/static/css/bootstrap.min.css}"/>
+    <link href="/static/css/navbar-top-fixed.css"
+          rel="stylesheet" media="screen" th:href="@{/static/css/navbar-top-fixed.css}"/>
+</head>
+<body>
+
+<div th:replace="/fragments/header :: header('resources')">Header</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 th:if="${type} != 'delete'">Resource</h1>
+            <h1 th:if="${type} == 'delete'">Delete resource</h1>
+            <br/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>id</th>
+                    <th>name</th>
+                    <th>parent</th>
+                    <th>fullPath</th>
+
+                    <th>edit</th>
+                    <th>delete</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><a th:href="@{'~/resources/' + ${resource.id}}" th:text="${resource.id}">id</a></td>
+                    <td th:text="${resource.name}">name</td>
+                    <td><a th:href="@{'~/resources/' + ${resource.parent?.id}}"
+                           th:text="${resource.parent?.id}">parent</a></td>
+                    <td th:text="${resource.fullPath}">fullPath</td>
+
+                    <td><a class="btn btn-sm btn-success"
+                           th:href="@{'~/resources/' + ${resource.id} + '/edit'}">edit</a></td>
+                    <td><a class="btn btn-sm btn-danger"
+                           th:href="@{'~/resources/' + ${resource.id} + '/delete'}">delete</a></td>
+                </tr>
+                </tbody>
+            </table>
+            <h3>Users of current resource</h3>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>id</th>
+                    <th>login</th>
+                    <th>password</th>
+                    <th>firstName</th>
+                    <th>lastName</th>
+                    <th>email</th>
+                    <th>phone</th>
+
+                    <th>delete</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user: ${resource.users}">
+                    <td><a th:href="@{'~/users/' + ${user.id}}" th:text="${user.id}">id</a></td>
+                    <td th:text="${user.login}">login</td>
+                    <td th:text="${user.password}">password</td>
+                    <td th:text="${user.firstName}">firstName</td>
+                    <td th:text="${user.lastName}">lastName</td>
+                    <td th:text="${user.email}">email</td>
+                    <td th:text="${user.phone}">phone</td>
+
+                    <td>
+                        <form th:action="@{'~/resources/' + ${resource.id} + '/users/' + ${user.id} + '/delete'}"
+                              method="post">
+                            <input class="btn btn-sm btn-danger" type="submit" value="delete"/>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <h3>Add user to current resource</h3>
+            <form class="col-sm-4" th:action="@{'~/resources/' + ${resource.id} + '/users'}" method="post">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label" for="userId">User</label>
+                    <div class="col-sm-9">
+                        <input class="form-control" placeholder="User" type="text" id="userId" name="userId"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-9">
+                        <input class="btn btn-sm btn-success" type="submit" value="add user"/>
+                    </div>
+                </div>
+            </form>
+            <form th:if="${type} == 'delete'"
+                  th:action="@{'~/resources/' + ${resource.id} + '/delete'}" method="post">
+                <h3>Are you sure you want to delete this resource?</h3>
+                <input class="btn btn-sm btn-danger" type="submit" value="delete resource"/>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div th:replace="/fragments/footer">&copy; 2017 File Sharing System</div>
+
+</body>
+</html>

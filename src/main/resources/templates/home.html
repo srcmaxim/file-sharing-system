@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Welcome to the File Sharing System application!</title>
+    <link rel="icon" type="image/png" th:href="@{/static/img/frog-icon-24.png}" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/css/bootstrap.min.css"
+          rel="stylesheet" media="screen" th:href="@{/static/css/bootstrap.min.css}"/>
+    <link href="/static/css/navbar-top-fixed.css"
+          rel="stylesheet" media="screen" th:href="@{/static/css/navbar-top-fixed.css}"/>
+</head>
+<body>
+
+<div th:replace="/fragments/header :: header('home')">Header</div>
+
+<div class="container">
+    <div class="jumbotron">
+        <div class="text-center">
+
+            <h1>File Sharing System</h1>
+
+            <div class="lead">
+                Welcome to the File Sharing System application!
+                Get started quickly by registering!
+            </div>
+
+            <p>
+                <a th:href="@{~/register}" id="register" class="btn btn-success btn-lg">Register</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<div th:replace="/fragments/footer">&copy; 2017 File Sharing System</div>
+
+</body>
+</html>

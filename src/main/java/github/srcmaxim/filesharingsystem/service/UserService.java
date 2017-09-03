@@ -1,9 +1,10 @@
 package github.srcmaxim.filesharingsystem.service;
 
+import github.srcmaxim.filesharingsystem.dto.RegistrationDto;
 import github.srcmaxim.filesharingsystem.model.Authority;
 import github.srcmaxim.filesharingsystem.model.User;
 import github.srcmaxim.filesharingsystem.repository.UserRepository;
-import github.srcmaxim.filesharingsystem.system.log.Loggable;
+import github.srcmaxim.filesharingsystem.annotation.Loggable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
@@ -11,6 +12,8 @@ import org.springframework.validation.FieldError;
 
 import javax.transaction.Transactional;
 import java.util.List;
+
+import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 
 @Service
 @Loggable
@@ -62,24 +65,34 @@ public class UserService {
     }
 
     @Transactional(Transactional.TxType.REQUIRED)
-    public User createUserAccount(User user, BindingResult result) {
-        principalsExist(user, result);
+    public User createUserAccount(RegistrationDto registrationDto, BindingResult result) {
+        principalsExist(registrationDto, result);
         if (result.hasErrors()) {
             return null;
         }
-        user.getAuthorities().add(new Authority(Authority.ROLE_USER));
+        User user = createUser(registrationDto);
         return repository.save(user);
     }
 
+    private User createUser(RegistrationDto registrationDto) {
+        User user = new User(registrationDto.getLogin(), registrationDto.getPassword(),
+                asList(new Authority(Authority.ROLE_USER)));
+        user.setFirstName(registrationDto.getFirstName());
+        user.setLastName(registrationDto.getLastName());
+        user.setEmail(registrationDto.getEmail());
+        user.setPhone(registrationDto.getPhone());
+        return user;
+    }
+
     @Transactional(Transactional.TxType.SUPPORTS)
-    public void principalsExist(User user, BindingResult result) {
-        if (repository.existsByLogin(user.getLogin())) {
+    public void principalsExist(RegistrationDto registrationDto, BindingResult result) {
+        if (repository.existsByLogin(registrationDto.getLogin())) {
             result.addError(new FieldError(result.getObjectName(), "login","error.user.login.non-unique"));
         }
-        if (repository.existsByEmail(user.getEmail())) {
+        if (repository.existsByEmail(registrationDto.getEmail())) {
             result.addError(new FieldError(result.getObjectName(), "email","error.user.email.non-unique"));
         }
-        if (repository.existsByPhone(user.getPhone())) {
+        if (repository.existsByPhone(registrationDto.getPhone())) {
             result.addError(new FieldError(result.getObjectName(), "phone","error.user.phone.non-unique"));
         }
     }

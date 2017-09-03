@@ -3,7 +3,7 @@ package github.srcmaxim.filesharingsystem.controller;
 import github.srcmaxim.filesharingsystem.model.File;
 import github.srcmaxim.filesharingsystem.model.Resource;
 import github.srcmaxim.filesharingsystem.service.ResourceService;
-import github.srcmaxim.filesharingsystem.system.log.Loggable;
+import github.srcmaxim.filesharingsystem.annotation.Loggable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

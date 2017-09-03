@@ -1,4 +1,4 @@
-package github.srcmaxim.filesharingsystem.system.log;
+package github.srcmaxim.filesharingsystem.aspect;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -17,7 +17,7 @@ public class LoggableAspect {
 
     final Logger logger = LoggerFactory.getLogger("github.srcmaxim.filesharingsystem");
 
-    @Around("@within(github.srcmaxim.filesharingsystem.system.log.Loggable)")
+    @Around("@within(github.srcmaxim.filesharingsystem.annotation.Loggable)")
     public Object log(ProceedingJoinPoint point) throws Throwable {
         long start = System.currentTimeMillis();
         Object result = point.proceed();

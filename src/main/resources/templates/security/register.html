@@ -16,7 +16,7 @@
 
 <div class="container">
 
-    <form class="form-signin" th:object="${user}" method="post">
+    <form class="form-signin" th:object="${registrationDto}" method="post">
         <h2 class="form-signin-heading">Please register</h2>
 
 
@@ -27,6 +27,11 @@
         <label for="password" class="sr-only">Password</label>
         <input th:field="*{password}" name="password" type="password" id="password" class="form-control" placeholder="Password" required=""/>
         <p th:each="error: ${#fields.errors('password')}"  th:text="#{${error}}">Validation error</p>
+
+        <label for="passwordConfirmation" class="sr-only">Password confirmation</label>
+        <input th:field="*{passwordConfirmation}" name="passwordConfirmation" type="password" id="passwordConfirmation"
+               class="form-control" placeholder="Password confirmation" required=""/>
+        <p th:each="error: ${#fields.errors('passwordConfirmation')}"  th:text="#{${error}}">Validation error</p>
 
 
 

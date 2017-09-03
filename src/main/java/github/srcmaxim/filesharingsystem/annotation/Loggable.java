@@ -1,4 +1,4 @@
-package github.srcmaxim.filesharingsystem.system.log;
+package github.srcmaxim.filesharingsystem.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

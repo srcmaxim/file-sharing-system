@@ -1,4 +1,4 @@
-package github.srcmaxim.filesharingsystem.controller.mapper;
+package github.srcmaxim.filesharingsystem.mapper;
 
 import github.srcmaxim.filesharingsystem.model.User;
 import org.springframework.core.MethodParameter;

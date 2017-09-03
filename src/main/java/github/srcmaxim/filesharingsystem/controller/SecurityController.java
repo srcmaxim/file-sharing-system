@@ -1,10 +1,11 @@
 package github.srcmaxim.filesharingsystem.controller;
 
+import github.srcmaxim.filesharingsystem.annotation.Loggable;
+import github.srcmaxim.filesharingsystem.dto.RegistrationDto;
 import github.srcmaxim.filesharingsystem.dto.UserDto;
 import github.srcmaxim.filesharingsystem.model.User;
 import github.srcmaxim.filesharingsystem.service.UserPrincipalsService;
 import github.srcmaxim.filesharingsystem.service.UserService;
-import github.srcmaxim.filesharingsystem.system.log.Loggable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,7 +15,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,21 +37,20 @@ public class SecurityController {
 
     @RequestMapping(value = "/register")
     public String registerView(Model model) {
-        model.addAttribute("user", new User());
+        model.addAttribute("registrationDto", new RegistrationDto());
         return "security/register";
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String register(@ModelAttribute("user") @Valid User user, BindingResult result, Errors errors, Model model) {
-        User registered = null;
+    public String register(@ModelAttribute("registrationDto") @Valid RegistrationDto registrationDto,
+                           BindingResult result, Model model) {
         if (!result.hasErrors()) {
-            registered = userService.createUserAccount(user, result);
+            User registered = userService.createUserAccount(registrationDto, result);
             if (registered != null && !result.hasErrors()) {
-                model.addAttribute("user", user);
                 return "redirect:/login";
             }
         }
-        model.addAttribute("user", user);
+        model.addAttribute("registrationDto", registrationDto);
         return "security/register";
     }
 
@@ -77,7 +76,7 @@ public class SecurityController {
             return "security/login";
         }
 
-        if (userDto.equals(userDetails.getPassword())) {
+        if (!userDto.getPassword().equals(userDetails.getPassword())) {
             result.addError(new FieldError(result.getObjectName(), "password", "error.user.password.not-match"));
             model.addAttribute("userDto", userDto);
             return "security/login";

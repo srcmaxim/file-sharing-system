@@ -3,7 +3,7 @@ package github.srcmaxim.filesharingsystem.service;
 import github.srcmaxim.filesharingsystem.model.User;
 import github.srcmaxim.filesharingsystem.model.UserPrincipals;
 import github.srcmaxim.filesharingsystem.repository.UserRepository;
-import github.srcmaxim.filesharingsystem.system.log.Loggable;
+import github.srcmaxim.filesharingsystem.annotation.Loggable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,7 +27,7 @@ public class UserPrincipalsService implements UserDetailsService {
     public UserPrincipals loadUserByUsername(String username) {
         User user = repository.findByLogin(username);
         if (user == null) {
-            throw new UsernameNotFoundException("error.user.login.not-found(" + username + ")");
+            throw new UsernameNotFoundException("error.user.login.not-found");
         }
         return new UserPrincipals(user);
     }

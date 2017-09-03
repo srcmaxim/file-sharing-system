@@ -1,7 +1,7 @@
 package github.srcmaxim.filesharingsystem.system;
 
-import github.srcmaxim.filesharingsystem.controller.mapper.ResourceMethodArgumentResolver;
-import github.srcmaxim.filesharingsystem.controller.mapper.UserMethodArgumentResolver;
+import github.srcmaxim.filesharingsystem.mapper.ResourceMethodArgumentResolver;
+import github.srcmaxim.filesharingsystem.mapper.UserMethodArgumentResolver;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;

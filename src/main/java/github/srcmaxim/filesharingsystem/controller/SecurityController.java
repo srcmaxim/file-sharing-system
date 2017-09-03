@@ -1,8 +1,8 @@
 package github.srcmaxim.filesharingsystem.controller;
 
 import github.srcmaxim.filesharingsystem.annotation.Loggable;
+import github.srcmaxim.filesharingsystem.dto.LoginDto;
 import github.srcmaxim.filesharingsystem.dto.RegistrationDto;
-import github.srcmaxim.filesharingsystem.dto.UserDto;
 import github.srcmaxim.filesharingsystem.model.User;
 import github.srcmaxim.filesharingsystem.service.UserPrincipalsService;
 import github.srcmaxim.filesharingsystem.service.UserService;
@@ -56,29 +56,29 @@ public class SecurityController {
 
     @RequestMapping(value = "/login")
     public String loginView(Model model) {
-        model.addAttribute("userDto", new UserDto());
+        model.addAttribute("loginDto", new LoginDto());
         return "security/login";
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String login(@ModelAttribute("userDto") @Valid UserDto userDto, BindingResult result, Model model) {
+    public String login(@ModelAttribute("loginDto") @Valid LoginDto loginDto, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("userDto", userDto);
+            model.addAttribute("loginDto", loginDto);
             return "security/login";
         }
 
         UserDetails userDetails;
         try {
-            userDetails = securityService.loadUserByUsername(userDto.getLogin());
+            userDetails = securityService.loadUserByUsername(loginDto.getLogin());
         } catch (UsernameNotFoundException e) {
             result.addError(new FieldError(result.getObjectName(), "login", e.getMessage()));
-            model.addAttribute("userDto", userDto);
+            model.addAttribute("loginDto", loginDto);
             return "security/login";
         }
 
-        if (!userDto.getPassword().equals(userDetails.getPassword())) {
+        if (!loginDto.getPassword().equals(userDetails.getPassword())) {
             result.addError(new FieldError(result.getObjectName(), "password", "error.user.password.not-match"));
-            model.addAttribute("userDto", userDto);
+            model.addAttribute("loginDto", loginDto);
             return "security/login";
         }
 

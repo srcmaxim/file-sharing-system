@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(exclude = "password")
-public class UserDto {
+public class LoginDto {
 
     @NotNull(message = "error.user.login.non-null")
     @Size(min = 4, max = 15, message = "error.user.login.size")

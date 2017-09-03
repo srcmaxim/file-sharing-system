@@ -1,17 +1,15 @@
 package github.srcmaxim.filesharingsystem.controller;
 
+import github.srcmaxim.filesharingsystem.annotation.Loggable;
 import github.srcmaxim.filesharingsystem.model.User;
 import github.srcmaxim.filesharingsystem.service.ResourceService;
 import github.srcmaxim.filesharingsystem.service.UserService;
-import github.srcmaxim.filesharingsystem.annotation.Loggable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import javax.validation.Validator;
 
 @Controller
 @Loggable
@@ -20,13 +18,11 @@ public class UserController {
 
     private UserService userService;
     private ResourceService resourceService;
-    private Validator validator;
 
     @Autowired
-    public UserController(UserService service, ResourceService resourceService, Validator validator) {
+    public UserController(UserService service, ResourceService resourceService) {
         this.userService = service;
         this.resourceService = resourceService;
-        this.validator = validator;
     }
 
     @RequestMapping(value = "")

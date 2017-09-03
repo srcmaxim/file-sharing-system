@@ -7,9 +7,13 @@ import github.srcmaxim.filesharingsystem.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import javax.validation.Valid;
 
 @Controller
 @Loggable
@@ -45,7 +49,12 @@ public class UserController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public String createUser(User user) {
+    public String createUser(@ModelAttribute("user") @Valid User user, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("user", user);
+            model.addAttribute("type", "create");
+            return "users/createOrUpdate";
+        }
         userService.saveUser(user);
         return "redirect:/users/" + user.getId();
     }
@@ -58,9 +67,13 @@ public class UserController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.POST)
-    public String updateUser(User user) {
+    public String updateUser(@ModelAttribute("user") @Valid User user, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("user", user);
+            model.addAttribute("type", "update");
+            return "users/createOrUpdate";
+        }
         user = userService.updateUser(user);
-        System.out.println(user);
         return "redirect:/users/" + user.getId();
     }
 

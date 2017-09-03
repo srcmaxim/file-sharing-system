@@ -22,7 +22,7 @@
     </div>
     <div class="row">
         <div class="col-md-8 mx-auto">
-            <form th:action="@{${user.id}? '~/users/' + ${user.id}: '~/users/'}" method="post">
+            <form th:object="${user}" th:action="@{${user.id}? '~/users/' + ${user.id}: '~/users/'}" method="post">
 
                 <div class="form-group row">
                     <label class="col-sm-3  col-form-label" for="id">Id</label>
@@ -30,40 +30,52 @@
                         <input class="form-control" placeholder="Id" type="number" id="id" name="id" th:value="${user.id}"/>
                     </div>
                 </div>
+
                 <div class="form-group row">
                     <label class="col-sm-3  col-form-label" for="login">Login</label>
                     <div class="col-sm-9">
                         <input class="form-control" placeholder="Login" type="text" id="login" name="login" th:value="${user.login}"/>
+                        <p th:each="error: ${#fields.errors('login')}"  th:text="#{${error}}">Validation error</p>
                     </div>
                 </div>
+
                 <div class="form-group row">
                     <label class="col-sm-3  col-form-label" for="password">Password</label>
                     <div class="col-sm-9">
                         <input class="form-control" placeholder="Password" type="text" id="password" name="password" th:value="${user.password}"/>
+                        <p th:each="error: ${#fields.errors('password')}"  th:text="#{${error}}">Validation error</p>
                     </div>
                 </div>
+
                 <div class="form-group row">
                     <label class="col-sm-3  col-form-label" for="firstName">First name</label>
                     <div class="col-sm-9">
                         <input class="form-control" placeholder="First name" type="text" id="firstName" name="firstName" th:value="${user.firstName}"/>
+                        <p th:each="error: ${#fields.errors('firstName')}"  th:text="#{${error}}">Validation error</p>
                     </div>
                 </div>
+
                 <div class="form-group row">
                     <label class="col-sm-3  col-form-label" for="lastName">Last name</label>
                     <div class="col-sm-9">
                         <input class="form-control" placeholder="Last name" type="text" id="lastName" name="lastName" th:value="${user.lastName}"/>
+                        <p th:each="error: ${#fields.errors('lastName')}"  th:text="#{${error}}">Validation error</p>
                     </div>
                 </div>
+
                 <div class="form-group row">
                     <label class="col-sm-3  col-form-label" for="email">Email</label>
                     <div class="col-sm-9">
                         <input class="form-control" placeholder="Email" type="text" id="email" name="email" th:value="${user.email}"/>
+                        <p th:each="error: ${#fields.errors('email')}"  th:text="#{${error}}">Validation error</p>
                     </div>
                 </div>
+
                 <div class="form-group row">
                     <label class="col-sm-3  col-form-label" for="phone">Phone</label>
                     <div class="col-sm-9">
                         <input class="form-control" placeholder="Phone in format +X(XXX)-XXX-XXXX" type="text" id="phone" name="phone" th:value="${user.phone}"/>
+                        <p th:each="error: ${#fields.errors('phone')}"  th:text="#{${error}}">Validation error</p>
                     </div>
                 </div>
 

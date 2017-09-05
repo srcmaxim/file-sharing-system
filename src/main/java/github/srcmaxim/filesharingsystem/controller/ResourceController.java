@@ -7,9 +7,12 @@ import github.srcmaxim.filesharingsystem.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import javax.validation.Valid;
 
 @Controller
 @Loggable
@@ -43,7 +46,13 @@ public class ResourceController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public String createResource(Resource resource, Long parentId) {
+    public String createResource(@Valid Resource resource, BindingResult result,
+                                 Long parentId, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("resource", resource);
+            model.addAttribute("type", "create");
+            return "resources/createOrUpdate";
+        }
         resource = service.saveResource(resource, parentId);
         return "redirect:/resources/" + resource.getId();
     }
@@ -57,7 +66,13 @@ public class ResourceController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.POST)
-    public String updateResource(Resource resource, Long parentId) {
+    public String updateResource(@Valid Resource resource, BindingResult result,
+                                 Long parentId, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("resource", resource);
+            model.addAttribute("type", "update");
+            return "resources/createOrUpdate";
+        }
         resource = service.updateResource(resource, parentId);
         return "redirect:/resources/" + resource.getId();
     }

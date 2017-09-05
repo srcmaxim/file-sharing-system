@@ -22,7 +22,7 @@
     </div>
     <div class="row">
         <div class="col-md-8 mx-auto">
-            <form th:action="@{${resource.id}? '~/resources/' + ${resource.id}: '~/resources/'}" method="post">
+            <form th:object="${resource}" th:action="@{${resource.id}? '~/resources/' + ${resource.id}: '~/resources/'}" method="post">
 
                 <div class="form-group row">
                     <label class="col-sm-3 col-form-label" for="id">Id</label>
@@ -31,13 +31,16 @@
                                th:value="${resource.id}"/>
                     </div>
                 </div>
+
                 <div class="form-group row">
                     <label class="col-sm-3 col-form-label" for="name">Name</label>
                     <div class="col-sm-9">
                         <input class="form-control" placeholder="Name" type="text" id="name" name="name"
                                th:value="${resource.name}"/>
+                        <p th:each="error: ${#fields.errors('name')}"  th:text="#{${error}}">Validation error</p>
                     </div>
                 </div>
+
                 <div class="form-group row">
                     <label class="col-sm-3 col-form-label" for="type">Type</label>
                     <div class="col-sm-9" th:if="${type} == 'create'">
@@ -53,6 +56,7 @@
                                th:value="${resource.type}"/>
                     </div>
                 </div>
+
                 <div class="form-group row">
                     <label class="col-sm-3 col-form-label" for="parentId">Parent</label>
                     <div class="col-sm-9">

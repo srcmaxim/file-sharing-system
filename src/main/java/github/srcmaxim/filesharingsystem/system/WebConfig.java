@@ -1,7 +1,7 @@
 package github.srcmaxim.filesharingsystem.system;
 
-import github.srcmaxim.filesharingsystem.mapper.ResourceMethodArgumentResolver;
-import github.srcmaxim.filesharingsystem.mapper.UserMethodArgumentResolver;
+import github.srcmaxim.filesharingsystem.mapper.ResourceValidatableMethodProcessor;
+import github.srcmaxim.filesharingsystem.mapper.UserValidatableMethodProcessor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
@@ -19,8 +19,8 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-        argumentResolvers.add(new ResourceMethodArgumentResolver());
-        argumentResolvers.add(new UserMethodArgumentResolver());
+        argumentResolvers.add(new ResourceValidatableMethodProcessor());
+        argumentResolvers.add(new UserValidatableMethodProcessor());
     }
 
 }

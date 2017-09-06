@@ -16,11 +16,11 @@ import javax.validation.constraints.Size;
 public class LoginDto {
 
     @NotNull(message = "error.user.login.non-null")
-    @Size(min = 4, max = 15, message = "error.user.login.size")
+    @Size(min = 4, max = 16, message = "error.user.login.size")
     @Pattern(regexp = "[A-z\\d]*", message = "error.user.login.pattern")
     private String login;
     @NotNull(message = "error.user.password.non-null")
-    @Size(min = 6, max = 15, message = "error.user.password.size")
+    @Size(min = 6, max = 16, message = "error.user.password.size")
     @Pattern(regexp = "[A-z\\d]*", message = "error.user.password.pattern")
     private String password;
 

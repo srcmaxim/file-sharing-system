@@ -133,6 +133,27 @@ public class ResourceControllerTest {
     }
 
     @Test
+    public void shouldNotCreateResourceIfNotValid() throws Exception {
+        String notValidName = "|\\|0T--valid..name";
+        Resource resource = new Folder(1L, notValidName, null, null);
+
+        mvc.perform(post("/resources").session(session).with(csrf())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id", "1")
+                .param("name", notValidName)
+                .param("type", "folder")
+        )
+                .andExpect(status().isOk())
+                .andExpect(view().name("resources/createOrUpdate"))
+                .andExpect(model().attribute("resource", resource))
+                .andExpect(model().attribute("type", is("create")));
+
+        verify(resourceService, never())
+                .saveResource(resource, null);
+        verifyNoMoreInteractions(resourceService);
+    }
+
+    @Test
     public void shouldUpdateResourceView() throws Exception {
         when(resourceService.findResource(1L)).thenReturn(resource);
 
@@ -164,6 +185,27 @@ public class ResourceControllerTest {
                 .andExpect(redirectedUrl("/resources/1"));
 
         verify(resourceService, times(1))
+                .updateResource(resource, null);
+        verifyNoMoreInteractions(resourceService);
+    }
+
+    @Test
+    public void shouldNotUpdateResourceIfNotValid() throws Exception {
+        String notValidName = "|\\|0T--valid..name";
+        Resource resource = new Folder(1L, notValidName, null, null);
+
+        mvc.perform(post("/resources/{id}", 1L).session(session).with(csrf())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id", resource.getId().toString())
+                .param("name", resource.getName())
+                .param("type", "folder")
+        )
+                .andExpect(status().isOk())
+                .andExpect(view().name("resources/createOrUpdate"))
+                .andExpect(model().attribute("resource", resource))
+                .andExpect(model().attribute("type", is("update")));
+
+        verify(resourceService, never())
                 .updateResource(resource, null);
         verifyNoMoreInteractions(resourceService);
     }

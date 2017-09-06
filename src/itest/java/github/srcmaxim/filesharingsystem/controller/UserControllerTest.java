@@ -121,6 +121,31 @@ public class UserControllerTest {
     }
 
     @Test
+    public void shouldNotCreateUserIfNotValid() throws Exception {
+        User user = new User(1L, "user1", "12345qaz",
+                "Bad name", "Bad name",
+                "Bad email", "Bad phone",
+                null, null);
+        mvc.perform(post("/users").session(session).with(csrf())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id", user.getId().toString())
+                .param("login", user.getLogin())
+                .param("password", user.getPassword())
+                .param("firstName", user.getFirstName())
+                .param("lastName", user.getLastName())
+                .param("email", user.getEmail())
+                .param("phone", user.getPhone())
+        )
+                .andExpect(status().isOk())
+                .andExpect(view().name("users/createOrUpdate"))
+                .andExpect(model().attribute("user", user))
+                .andExpect(model().attribute("type", is("create")));
+
+        verify(userService, never()).saveUser(user);
+        verifyNoMoreInteractions(userService);
+    }
+
+    @Test
     public void shouldUpdateUserView() throws Exception {
         when(userService.findUser(1L)).thenReturn(user);
 
@@ -153,6 +178,32 @@ public class UserControllerTest {
                 .andExpect(redirectedUrl("/users/1"));
 
         verify(userService, times(1)).updateUser(user);
+        verifyNoMoreInteractions(userService);
+    }
+
+    @Test
+    public void shouldNotUpdateUserIfNotValid() throws Exception {
+        User user = new User(1L, "user1", "12345qaz",
+                "Bad name", "Bad name",
+                "Bad email", "Bad phone",
+                null, null);
+
+        mvc.perform(post("/users/{id}", 1L).session(session).with(csrf())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id", user.getId().toString())
+                .param("login", user.getLogin())
+                .param("password", user.getPassword())
+                .param("firstName", user.getFirstName())
+                .param("lastName", user.getLastName())
+                .param("email", user.getEmail())
+                .param("phone", user.getPhone())
+        )
+                .andExpect(status().isOk())
+                .andExpect(view().name("users/createOrUpdate"))
+                .andExpect(model().attribute("user", user))
+                .andExpect(model().attribute("type", is("update")));
+
+        verify(userService, never()).updateUser(user);
         verifyNoMoreInteractions(userService);
     }
 

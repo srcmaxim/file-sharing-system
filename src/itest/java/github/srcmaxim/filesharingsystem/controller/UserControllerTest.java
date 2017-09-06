@@ -44,14 +44,20 @@ public class UserControllerTest {
 
     @BeforeClass
     public static void setupSession() {
-        session = new CustomHttpSession("user1", "12345qaz", "ROLE_USER");
+        session = new CustomHttpSession("user1", "12345qaz", "ROLE_ADMIN", "ROLE_USER");
     }
 
     @Before
     public void setup() {
         users = asList(
-                new User("Jack", "p1", null),
-                new User("Jones", "p2", null)
+                new User(1L, "user1", "12345qaz",
+                        "Firstname", "Lastname",
+                        "+1(111)-111-1111", "user1@gmail.com",
+                        null, null),
+                new User(2L, "user2", "12345qaz",
+                        "Firstname", "Lastname",
+                        "+2(222)-222-2222", "user2@gmail.com",
+                        null, null)
         );
         user = users.get(0);
     }
@@ -100,25 +106,21 @@ public class UserControllerTest {
         mvc.perform(post("/users").session(session).with(csrf())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("id", "1")
-                .param("login", "login")
-                .param("password", "password")
-                .param("firstName", "firstName")
-                .param("lastName", "lastName")
-                .param("email", "email")
-                .param("phone", "phone")
+                .param("login", "user1")
+                .param("password", "12345qaz")
+                .param("firstName", "Firstname")
+                .param("lastName", "Lastname")
+                .param("email", "user1@gmail.com")
+                .param("phone", "+1(111)-111-1111")
         )
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl("/users/1"));
 
-        verify(userService, times(1))
-                .saveUser(new User(1L,
-                        "login", "password",
-                        "firstName", "lastName",
-                        "email", "phone",
-                        null, null));
+        verify(userService, times(1)).saveUser(user);
         verifyNoMoreInteractions(userService);
     }
 
+    @Test
     public void shouldUpdateUserView() throws Exception {
         when(userService.findUser(1L)).thenReturn(user);
 
@@ -126,43 +128,31 @@ public class UserControllerTest {
                 .accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
                 .andExpect(view().name("users/createOrUpdate"))
-                .andExpect(model().attribute("user", hasItem(user)))
+                .andExpect(model().attribute("user", user))
                 .andExpect(model().attribute("type", is("update")));
 
+        verify(userService, times(1)).findUser(1L);
         verifyNoMoreInteractions(userService);
     }
 
     @Test
     public void shouldUpdateUser() throws Exception {
-        when( userService.updateUser(new User(1L,
-                "login", "password",
-                "firstName", "lastName",
-                "email", "phone",
-                null, null))).thenReturn(new User(1L,
-                "login", "password",
-                "firstName", "lastName",
-                "email", "phone",
-                null, null));
+        when(userService.updateUser(user)).thenReturn(user);
 
         mvc.perform(post("/users/{id}", 1L).session(session).with(csrf())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("id", "1")
-                .param("login", "login")
-                .param("password", "password")
-                .param("firstName", "firstName")
-                .param("lastName", "lastName")
-                .param("email", "email")
-                .param("phone", "phone")
+                .param("login", "user1")
+                .param("password", "12345qaz")
+                .param("firstName", "Firstname")
+                .param("lastName", "Lastname")
+                .param("email", "user1@gmail.com")
+                .param("phone", "+1(111)-111-1111")
         )
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl("/users/1"));
 
-        verify(userService, times(1))
-                .updateUser(new User(1L,
-                        "login", "password",
-                        "firstName", "lastName",
-                        "email", "phone",
-                        null, null));
+        verify(userService, times(1)).updateUser(user);
         verifyNoMoreInteractions(userService);
     }
 

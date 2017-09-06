@@ -1,6 +1,7 @@
 package github.srcmaxim.filesharingsystem.controller;
 
 import github.srcmaxim.filesharingsystem.model.File;
+import github.srcmaxim.filesharingsystem.model.Folder;
 import github.srcmaxim.filesharingsystem.model.Resource;
 import github.srcmaxim.filesharingsystem.model.User;
 import github.srcmaxim.filesharingsystem.service.ResourceService;
@@ -51,15 +52,23 @@ public class ResourceControllerTest {
 
     @BeforeClass
     public static void setupSession() {
-        session = new CustomHttpSession("user1", "12345qaz", "ROLE_ADMIN");
+        session = new CustomHttpSession("user1", "12345qaz", "ROLE_ADMIN", "ROLE_USER");
     }
 
     @Before
     public void setup() {
         user1 = User.createNewUser("Jack", "p1");
         user1.setId(1L);
+        user1.setFirstName("Firstname");
+        user1.setLastName("Lastname");
+        user1.setPhone("+1(111)-111-1111");
+        user1.setEmail("user1@gmail.com");
         user2 = User.createNewUser("John", "p2");
         user2.setId(2L);
+        user1.setFirstName("Firstname");
+        user1.setLastName("Lastname");
+        user1.setPhone("+2(222)-222-2222");
+        user1.setEmail("user1@gmail.com");
         resources = user1.getResources();
         resource = resources.get(0);
     }
@@ -105,16 +114,15 @@ public class ResourceControllerTest {
 
     @Test
     public void shouldCreateResource() throws Exception {
-        File resource = new File(1L, "name", null, null);
+        Resource resource = new Folder(1L, "name", null, null);
         when(resourceService.saveResource(resource, null))
-                .thenReturn(new File(1L, "name", null, null));
+                .thenReturn(resource);
 
         mvc.perform(post("/resources").session(session).with(csrf())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("id", "1")
                 .param("name", "name")
-                .param("userIds", "1, 2")
-                .param("type", "file")
+                .param("type", "folder")
         )
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl("/resources/1"));
@@ -124,35 +132,39 @@ public class ResourceControllerTest {
         verifyNoMoreInteractions(resourceService);
     }
 
-    public void shouldUpdateUserView() throws Exception {
+    @Test
+    public void shouldUpdateResourceView() throws Exception {
         when(resourceService.findResource(1L)).thenReturn(resource);
 
         mvc.perform(get("/resources/{id}/edit", 1L).session(session)
                 .accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
                 .andExpect(view().name("resources/createOrUpdate"))
-                .andExpect(model().attribute("resource", hasItem(resource)))
+                .andExpect(model().attribute("resource", resource))
                 .andExpect(model().attribute("type", is("update")));
 
+
+        verify(resourceService, times(1)).findResource(1L);
         verifyNoMoreInteractions(resourceService);
     }
 
     @Test
     public void shouldUpdateResource() throws Exception {
-        when(resourceService.updateResource(new File(1L, "name", null, null), null))
-                .thenReturn(new File(1L, "name", null, null));
+        Resource resource = new Folder(1L, "name", null, null);
+        when(resourceService.updateResource(resource, null))
+                .thenReturn(resource);
 
         mvc.perform(post("/resources/{id}", 1L).session(session).with(csrf())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("id", "1")
                 .param("name", "name")
-                .param("type", "file")
+                .param("type", "folder")
         )
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl("/resources/1"));
 
         verify(resourceService, times(1))
-                .updateResource(new File(1L, "name", null, null), null);
+                .updateResource(resource, null);
         verifyNoMoreInteractions(resourceService);
     }
 

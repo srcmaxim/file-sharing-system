@@ -15,8 +15,8 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h1 th:if="${type} == 'create'">Create user</h1>
-            <h1 th:if="${type} == 'update'">Edit user</h1>
+            <h1 th:if="${type} == 'create'" th:text="#{user.logo.create}">Create user</h1>
+            <h1 th:if="${type} == 'update'" th:text="#{user.logo.edit}">Edit user</h1>
             <br/>
         </div>
     </div>
@@ -25,56 +25,56 @@
             <form th:object="${user}" th:action="@{${user.id}? '~/users/' + ${user.id}: '~/users/'}" method="post">
 
                 <div class="form-group row">
-                    <label class="col-sm-3  col-form-label" for="id">Id</label>
+                    <label class="col-sm-3  col-form-label" for="id" th:text="#{user.id}">Id</label>
                     <div class="col-sm-9">
-                        <input class="form-control" placeholder="Id" type="number" id="id" name="id" th:value="${user.id}"/>
+                        <input class="form-control" placeholder="Id" th:placeholder="#{user.id}" type="number" id="id" name="id" th:value="${user.id}"/>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label class="col-sm-3  col-form-label" for="login">Login</label>
+                    <label class="col-sm-3  col-form-label" for="login" th:text="#{user.login}">Login</label>
                     <div class="col-sm-9">
-                        <input class="form-control" placeholder="Login" type="text" id="login" name="login" th:value="${user.login}"/>
+                        <input class="form-control" placeholder="Login" th:placeholder="#{user.login}" type="text" id="login" name="login" th:value="${user.login}"/>
                         <p th:each="error: ${#fields.errors('login')}"  th:text="#{${error}}">Validation error</p>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label class="col-sm-3  col-form-label" for="password">Password</label>
+                    <label class="col-sm-3  col-form-label" for="password" th:text="#{user.password}">Password</label>
                     <div class="col-sm-9">
-                        <input class="form-control" placeholder="Password" type="text" id="password" name="password" th:value="${user.password}"/>
+                        <input class="form-control" placeholder="Password" th:placeholder="#{user.password}" type="text" id="password" name="password" th:value="${user.password}"/>
                         <p th:each="error: ${#fields.errors('password')}"  th:text="#{${error}}">Validation error</p>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label class="col-sm-3  col-form-label" for="firstName">First name</label>
+                    <label class="col-sm-3  col-form-label" for="firstName" th:text="#{user.first-name}">First name</label>
                     <div class="col-sm-9">
-                        <input class="form-control" placeholder="First name" type="text" id="firstName" name="firstName" th:value="${user.firstName}"/>
+                        <input class="form-control" placeholder="First name" th:placeholder="#{user.first-name}" type="text" id="firstName" name="firstName" th:value="${user.firstName}"/>
                         <p th:each="error: ${#fields.errors('firstName')}"  th:text="#{${error}}">Validation error</p>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label class="col-sm-3  col-form-label" for="lastName">Last name</label>
+                    <label class="col-sm-3  col-form-label" for="lastName" th:text="#{user.last-name}">Last name</label>
                     <div class="col-sm-9">
-                        <input class="form-control" placeholder="Last name" type="text" id="lastName" name="lastName" th:value="${user.lastName}"/>
+                        <input class="form-control" placeholder="Last name" th:placeholder="#{user.last-name}" type="text" id="lastName" name="lastName" th:value="${user.lastName}"/>
                         <p th:each="error: ${#fields.errors('lastName')}"  th:text="#{${error}}">Validation error</p>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label class="col-sm-3  col-form-label" for="email">Email</label>
+                    <label class="col-sm-3  col-form-label" for="email" th:text="#{user.email}">Email</label>
                     <div class="col-sm-9">
-                        <input class="form-control" placeholder="Email" type="text" id="email" name="email" th:value="${user.email}"/>
+                        <input class="form-control" placeholder="Email" th:placeholder="#{user.email}" type="text" id="email" name="email" th:value="${user.email}"/>
                         <p th:each="error: ${#fields.errors('email')}"  th:text="#{${error}}">Validation error</p>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label class="col-sm-3  col-form-label" for="phone">Phone</label>
+                    <label class="col-sm-3  col-form-label" for="phone" th:text="#{user.phone}">Phone</label>
                     <div class="col-sm-9">
-                        <input class="form-control" placeholder="Phone in format +X(XXX)-XXX-XXXX" type="text" id="phone" name="phone" th:value="${user.phone}"/>
+                        <input class="form-control" placeholder="Phone in format +X(XXX)-XXX-XXXX" th:placeholder="#{user.phone.placeholder}" type="text" id="phone" name="phone" th:value="${user.phone}"/>
                         <p th:each="error: ${#fields.errors('phone')}"  th:text="#{${error}}">Validation error</p>
                     </div>
                 </div>
@@ -82,8 +82,8 @@
 
                 <div class="form-group row">
                     <div class="col-sm-9">
-                        <input class="btn btn-primary" th:if="${type} == 'create'" type="submit" value="Create user"/>
-                        <input class="btn btn-primary" th:if="${type} == 'update'" type="submit" value="Edit user"/>
+                        <input class="btn btn-primary" th:if="${type} == 'create'" type="submit" value="Create user" th:value="#{user.logo.create}"/>
+                        <input class="btn btn-primary" th:if="${type} == 'update'" type="submit" value="Edit user" th:value="#{user.logo.edit}"/>
                     </div>
                 </div>
             </form>

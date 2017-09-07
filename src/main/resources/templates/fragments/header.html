@@ -23,21 +23,24 @@
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item" th:classappend="${activeTab == 'home'} ? 'active' : null">
-                    <a class="nav-link" href="#" th:href="@{/}">Home</a>
+                    <a class="nav-link" href="#" th:href="@{/}" th:text="#{home.logo.home}">Home</a>
                 </li>
                 <li class="nav-item" th:classappend="${activeTab == 'users'} ? 'active' : null">
-                    <a class="nav-link" href="#" th:href="@{/users}">Users</a>
+                    <a class="nav-link" href="#" th:href="@{/users}" th:text="#{user.logo.users}">Users</a>
                 </li>
                 <li class="nav-item" th:classappend="${activeTab == 'resources'} ? 'active' : null">
-                    <a class="nav-link" href="#" th:href="@{/resources}">Resources</a>
+                    <a class="nav-link" href="#" th:href="@{/resources}" th:text="#{resource.logo.resources}">Resources</a>
                 </li>
             </ul>
 
 
             <div class="btn-group" authorities="group" aria-label="Basic example">
-                <a sec:authorize="isAnonymous()" class="btn btn-outline-success" href="#" th:href="@{/login}" authorities="button">Login</a>
-                <a sec:authorize="isAnonymous()" class="btn btn-outline-success" href="#" th:href="@{/register}" authorities="button">Register</a>
-                <a sec:authorize="isAuthenticated()" class="btn btn-outline-success" href="#" th:href="@{/logout}" authorities="button">Logout</a>
+                <a sec:authorize="isAnonymous()" class="btn btn-outline-success" href="#" th:href="@{/login}"
+                   authorities="button" th:text="#{header.login}">Login</a>
+                <a sec:authorize="isAnonymous()" class="btn btn-outline-success" href="#" th:href="@{/register}"
+                   authorities="button" th:text="#{header.register}">Register</a>
+                <a sec:authorize="isAuthenticated()" class="btn btn-outline-success" href="#" th:href="@{/logout}"
+                   authorities="button" th:text="#{header.logout}">Logout</a>
             </div>
         </div>
     </nav>

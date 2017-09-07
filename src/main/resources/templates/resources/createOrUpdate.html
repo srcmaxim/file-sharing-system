@@ -15,8 +15,8 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h1 th:if="${type} == 'create'">Create resource</h1>
-            <h1 th:if="${type} == 'update'">Edit resource</h1>
+            <h1 th:if="${type} == 'create'" th:text="#{resource.logo.create}">Create resource</h1>
+            <h1 th:if="${type} == 'update'" th:text="#{resource.logo.edit}">Edit resource</h1>
             <br/>
         </div>
     </div>
@@ -25,43 +25,41 @@
             <form th:object="${resource}" th:action="@{${resource.id}? '~/resources/' + ${resource.id}: '~/resources/'}" method="post">
 
                 <div class="form-group row">
-                    <label class="col-sm-3 col-form-label" for="id">Id</label>
+                    <label class="col-sm-3 col-form-label" for="id" th:text="#{resource.id}">Id</label>
                     <div class="col-sm-9">
-                        <input class="form-control" placeholder="Id" type="number" id="id" name="id"
+                        <input class="form-control" placeholder="Id" th:placeholder="#{resource.id}" type="number" id="id" name="id"
                                th:value="${resource.id}"/>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label class="col-sm-3 col-form-label" for="name">Name</label>
+                    <label class="col-sm-3 col-form-label" for="name" th:text="#{resource.name}">Name</label>
                     <div class="col-sm-9">
-                        <input class="form-control" placeholder="Name" type="text" id="name" name="name"
+                        <input class="form-control" placeholder="Name" th:placeholder="#{resource.name}" type="text" id="name" name="name"
                                th:value="${resource.name}"/>
                         <p th:each="error: ${#fields.errors('name')}"  th:text="#{${error}}">Validation error</p>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label class="col-sm-3 col-form-label" for="type">Type</label>
+                    <label class="col-sm-3 col-form-label" for="type" th:text="#{resource.type}">Type</label>
                     <div class="col-sm-9" th:if="${type} == 'create'">
-                        <select class="form-control" id="type" name="type"
-                                th:with="type=${resource.getType()}">
-                            <option value="file" th:selected="${type == 'file'}">file</option>
-                            <option value="folder" th:selected="${type == 'folder'}">folder</option>
+                        <select class="form-control" id="type" name="type" th:with="type=${resource.getType()}">
+                            <option th:value="#{resource.file}" th:selected="${type == 'file'}">file</option>
+                            <option th:value="#{resource.folder}" th:selected="${type == 'folder'}">folder</option>
                         </select>
                     </div>
                     <div class="col-sm-9" th:if="${type} == 'update'">
-                        <span th:text="${resource.getType()}"/>
-                        <input class="form-control" placeholder="Parent" type="hidden" th:id="type" name="type"
-                               th:value="${resource.type}"/>
+                        <span th:text="#{'resource.type.' + ${resource.type}}"/>
+                        <input class="form-control" type="hidden" th:id="type" name="type" th:value="${resource.type}"/>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label class="col-sm-3 col-form-label" for="parentId">Parent</label>
+                    <label class="col-sm-3 col-form-label" for="parentId" th:text="#{resource.parent}">Parent</label>
                     <div class="col-sm-9">
-                        <input class="form-control" placeholder="Parent" type="text" id="parentId" name="parentId"
-                               th:value="${resource.parent?.id}"/>
+                        <input class="form-control" placeholder="Parent" th:placeholder="#{resource.parent}" type="text"
+                               id="parentId" name="parentId" th:value="${resource.parent?.id}"/>
                     </div>
                 </div>
 
@@ -69,8 +67,9 @@
                 <div class="form-group row">
                     <div class="col-sm-9">
                         <input class="btn btn-primary" th:if="${type} == 'create'" type="submit"
-                               value="Create resource"/>
-                        <input class="btn btn-primary" th:if="${type} == 'update'" type="submit" value="Edit resource"/>
+                               value="Create resource" th:value="#{resource.logo.create}"/>
+                        <input class="btn btn-primary" th:if="${type} == 'update'" type="submit"
+                               value="Edit resource" th:value="#{resource.logo.edit}"/>
                     </div>
                 </div>
             </form>

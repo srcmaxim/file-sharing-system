@@ -15,9 +15,9 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h1>Users</h1>
+            <h1 th:text="#{user.logo.users}">Users</h1>
             <br/>
-            <h3><a class="btn btn-primary" th:href="@{~/users/create}">Create user</a></h3>
+            <h3><a th:text="#{user.logo.create}" class="btn btn-primary" th:href="@{~/users/create}">Create user</a></h3>
         </div>
     </div>
     <div class="row">
@@ -25,16 +25,16 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th>id</th>
-                    <th>login</th>
-                    <th>password</th>
-                    <th>firstName</th>
-                    <th>lastName</th>
-                    <th>email</th>
-                    <th>phone</th>
+                    <th th:text="#{user.id}">id</th>
+                    <th th:text="#{user.login}">login</th>
+                    <th th:text="#{user.password}">password</th>
+                    <th th:text="#{user.first-name}">firstName</th>
+                    <th th:text="#{user.last-name}">lastName</th>
+                    <th th:text="#{user.email}">email</th>
+                    <th th:text="#{user.phone}">phone</th>
 
-                    <th>edit</th>
-                    <th>delete</th>
+                    <th th:text="#{user.edit}">edit</th>
+                    <th th:text="#{user.delete}">delete</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -47,8 +47,8 @@
                     <td th:text="${user.email}">email</td>
                     <td th:text="${user.phone}">phone</td>
 
-                    <td><a class="btn btn-sm btn-success" th:href="@{'~/users/' + ${user.id} + '/edit'}">edit</a></td>
-                    <td><a class="btn btn-sm btn-danger" th:href="@{'~/users/' + ${user.id} + '/delete'}">delete</a></td>
+                    <td><a th:text="#{user.edit}" class="btn btn-sm btn-success" th:href="@{'~/users/' + ${user.id} + '/edit'}">edit</a></td>
+                    <td><a th:text="#{user.delete}" class="btn btn-sm btn-danger" th:href="@{'~/users/' + ${user.id} + '/delete'}">delete</a></td>
                 </tr>
                 </tbody>
             </table>

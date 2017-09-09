@@ -15,6 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 
 public class UserValidationTest {
+
     private static Validator validator;
 
     @Before

@@ -1,7 +1,7 @@
 package github.srcmaxim.filesharingsystem.dto;
 
 import org.hamcrest.MatcherAssert;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import javax.validation.ConstraintViolation;
@@ -13,12 +13,12 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 
-public class RegistrationDtoTest {
+public class RegistrationDtoValidationTest {
 
     private static Validator validator;
 
-    @Before
-    public void setUp() {
+    @BeforeClass
+    public static void setUp() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
     }

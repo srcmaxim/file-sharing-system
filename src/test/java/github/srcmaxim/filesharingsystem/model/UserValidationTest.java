@@ -1,7 +1,7 @@
 package github.srcmaxim.filesharingsystem.model;
 
 import org.hamcrest.MatcherAssert;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import javax.validation.ConstraintViolation;
@@ -18,8 +18,8 @@ public class UserValidationTest {
 
     private static Validator validator;
 
-    @Before
-    public void setUp() {
+    @BeforeClass
+    public static void setUp() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
     }

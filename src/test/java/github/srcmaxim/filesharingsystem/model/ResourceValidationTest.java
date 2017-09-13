@@ -25,7 +25,7 @@ public class ResourceValidationTest {
     @Test
     public void shouldValidateFolder() {
         Folder parent = new Folder("folder", null, Collections.emptyList());
-        Folder folder = new Folder("folDER-Folder_FOLDER.folder", parent, Collections.emptyList());
+        Folder folder = new Folder("folDER-f_FOLDER.folder", parent, Collections.emptyList());
         Set<ConstraintViolation<Folder>> validate = validator.validate(folder);
 
         assertThat(validate).hasSize(0);

@@ -146,6 +146,25 @@ public class UserControllerTest {
     }
 
     @Test
+    public void shouldNotCreateUserIfNoCsrfToken() throws Exception {
+        mvc.perform(post("/users").session(session)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id", "1")
+                .param("login", "user1")
+                .param("password", "12345qaz")
+                .param("firstName", "Firstname")
+                .param("lastName", "Lastname")
+                .param("email", "user1@gmail.com")
+                .param("phone", "+1(111)-111-1111")
+        )
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/users/1"));
+
+        verify(userService, never()).saveUser(user);
+        verifyNoMoreInteractions(userService);
+    }
+
+    @Test
     public void shouldUpdateUserView() throws Exception {
         when(userService.findUser(1L)).thenReturn(user);
 
@@ -202,6 +221,25 @@ public class UserControllerTest {
                 .andExpect(view().name("users/createOrUpdate"))
                 .andExpect(model().attribute("user", user))
                 .andExpect(model().attribute("type", is("update")));
+
+        verify(userService, never()).updateUser(user);
+        verifyNoMoreInteractions(userService);
+    }
+
+    @Test
+    public void shouldNotUpdateUserIfNoCsrfToken() throws Exception {
+        mvc.perform(post("/users/{id}", 1L).session(session)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id", "1")
+                .param("login", "user1")
+                .param("password", "12345qaz")
+                .param("firstName", "Firstname")
+                .param("lastName", "Lastname")
+                .param("email", "user1@gmail.com")
+                .param("phone", "+1(111)-111-1111")
+        )
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/users/1"));
 
         verify(userService, never()).updateUser(user);
         verifyNoMoreInteractions(userService);

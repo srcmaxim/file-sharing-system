@@ -5,16 +5,12 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
+import java.util.List;
 
 public class CustomHttpSession extends MockHttpSession {
 
-    public CustomHttpSession(String principal, String credentials, String... role) {
-        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                principal, credentials,
-                Arrays.stream(role).map((String name) -> new Authority(name))
-                        .collect(Collectors.toList()));
+    public CustomHttpSession(String principal, String credentials, List<Authority> authorities) {
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(principal, credentials, authorities);
         setAttribute(
                 HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
                 new MockSecurityContext(auth));

@@ -1,5 +1,6 @@
 package github.srcmaxim.filesharingsystem.controller;
 
+import github.srcmaxim.filesharingsystem.model.Authority;
 import github.srcmaxim.filesharingsystem.model.User;
 import github.srcmaxim.filesharingsystem.service.UserService;
 import github.srcmaxim.filesharingsystem.system.DbConfig;
@@ -44,7 +45,7 @@ public class UserControllerTest {
 
     @BeforeClass
     public static void setupSession() {
-        session = new CustomHttpSession("user1", "12345qaz", "ROLE_ADMIN", "ROLE_USER");
+        session = new CustomHttpSession("user1", "12345qaz", asList(Authority.values()));
     }
 
     @Before

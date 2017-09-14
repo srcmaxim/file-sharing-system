@@ -10,8 +10,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 
@@ -55,24 +54,24 @@ public class User {
             message = "error.user.phone.non-valid")
     private String phone;
 
-    @ManyToMany(cascade=CascadeType.ALL)
-    @JoinTable(name="user_authority",
-            joinColumns = {@JoinColumn(name="user_id", referencedColumnName="id")},
-            inverseJoinColumns = {@JoinColumn(name="authority_id", referencedColumnName="id")})
-    private List<Authority> authorities = new ArrayList<>();
+    @ElementCollection(targetClass = Authority.class, fetch = FetchType.EAGER)
+    @JoinTable(name = "authority", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "name", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Set<Authority> authorities = new HashSet<>();
 
     @JsonIgnoreProperties("users")
     @ManyToMany(mappedBy = "users", cascade = {CascadeType.PERSIST})
     private List<Resource> resources = new ArrayList<>();
 
-    public User(String login, String password, List<Authority> authorities) {
+    public User(String login, String password, Set<Authority> authorities) {
         this.login = login;
         this.password = password;
-        this.authorities = authorities;
+        this.authorities.addAll(authorities);
     }
 
     public static User createNewUser(String login, String password) {
-        User user = new User(login, password, asList(new Authority(null , Authority.ROLE_USER)));
+        User user = new User(login, password, EnumSet.of(Authority.ROLE_USER));
         List<User> userList = asList(user);
         user.getResources().add(new Folder("audio", null, userList));
         user.getResources().add(new Folder("video", null, userList));

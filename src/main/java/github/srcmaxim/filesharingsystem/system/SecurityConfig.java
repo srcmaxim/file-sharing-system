@@ -11,6 +11,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import static github.srcmaxim.filesharingsystem.model.Authority.ROLE_ADMIN;
+import static github.srcmaxim.filesharingsystem.model.Authority.ROLE_USER;
+
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -24,8 +27,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                     .antMatchers("/static/**", "/").permitAll()
                     .antMatchers("/register", "/login", "/logout").permitAll()
-                    .antMatchers("/users/**").hasRole("ADMIN")
-                    .antMatchers("/resources/**").hasAnyRole("USER", "ADMIN");
+                    .antMatchers("/users/**").hasAuthority(ROLE_ADMIN.name())
+                    .antMatchers("/resources/**").hasAnyAuthority(
+                            ROLE_USER.name(), ROLE_ADMIN.name());
     }
 
     @Override

@@ -1,9 +1,6 @@
 package github.srcmaxim.filesharingsystem.controller;
 
-import github.srcmaxim.filesharingsystem.model.File;
-import github.srcmaxim.filesharingsystem.model.Folder;
-import github.srcmaxim.filesharingsystem.model.Resource;
-import github.srcmaxim.filesharingsystem.model.User;
+import github.srcmaxim.filesharingsystem.model.*;
 import github.srcmaxim.filesharingsystem.service.ResourceService;
 import github.srcmaxim.filesharingsystem.service.UserService;
 import github.srcmaxim.filesharingsystem.system.DbConfig;
@@ -22,7 +19,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static org.hamcrest.Matchers.*;
+import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -52,7 +51,7 @@ public class ResourceControllerTest {
 
     @BeforeClass
     public static void setupSession() {
-        session = new CustomHttpSession("user1", "12345qaz", "ROLE_ADMIN", "ROLE_USER");
+        session = new CustomHttpSession("user1", "12345qaz", asList(Authority.values()));
     }
 
     @Before

@@ -161,8 +161,7 @@ public class ResourceControllerTest {
                 .param("name", "name")
                 .param("type", "folder")
         )
-                .andExpect(status().isFound())
-                .andExpect(redirectedUrl("/resources/1"));
+                .andExpect(status().isForbidden());
 
         verify(resourceService, never())
                 .saveResource(resource, null);
@@ -228,18 +227,13 @@ public class ResourceControllerTest {
 
     @Test
     public void shouldNotUpdateResourceIfNoCsrfToken() throws Exception {
-        Resource resource = new Folder(1L, "name", null, null);
-        when(resourceService.updateResource(resource, null))
-                .thenReturn(resource);
-
-        mvc.perform(post("/resources/{id}", 1L).session(session).with(csrf())
+        mvc.perform(post("/resources/{id}", 1L).session(session)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("id", "1")
                 .param("name", "name")
                 .param("type", "folder")
         )
-                .andExpect(status().isFound())
-                .andExpect(redirectedUrl("/resources/1"));
+                .andExpect(status().isForbidden());
 
         verify(resourceService, never())
                 .updateResource(resource, null);

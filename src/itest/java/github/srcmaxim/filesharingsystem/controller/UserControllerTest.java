@@ -157,8 +157,7 @@ public class UserControllerTest {
                 .param("email", "user1@gmail.com")
                 .param("phone", "+1(111)-111-1111")
         )
-                .andExpect(status().isFound())
-                .andExpect(redirectedUrl("/users/1"));
+                .andExpect(status().isForbidden());
 
         verify(userService, never()).saveUser(user);
         verifyNoMoreInteractions(userService);
@@ -238,8 +237,7 @@ public class UserControllerTest {
                 .param("email", "user1@gmail.com")
                 .param("phone", "+1(111)-111-1111")
         )
-                .andExpect(status().isFound())
-                .andExpect(redirectedUrl("/users/1"));
+                .andExpect(status().isForbidden());
 
         verify(userService, never()).updateUser(user);
         verifyNoMoreInteractions(userService);

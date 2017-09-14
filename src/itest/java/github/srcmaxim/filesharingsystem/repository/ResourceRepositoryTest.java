@@ -1,5 +1,6 @@
 package github.srcmaxim.filesharingsystem.repository;
 
+import github.srcmaxim.filesharingsystem.model.File;
 import github.srcmaxim.filesharingsystem.model.Folder;
 import github.srcmaxim.filesharingsystem.model.Resource;
 import github.srcmaxim.filesharingsystem.model.User;
@@ -14,8 +15,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.transaction.Transactional;
 import java.util.List;
 
+
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -56,6 +63,37 @@ public class ResourceRepositoryTest {
         Object[] resourceNames = user.getResources().stream()
                 .map(Resource::getName).toArray();
         assertThat(resourceNames).containsAll(asList("audio", "video", "image"));
+    }
+
+    @Test
+    public void shouldCreatedAudioVideoImageResourcesForNewUser() {
+        User user = getUser();
+        user = userRepository.save(user);
+        user = userRepository.findOne(user.getId());
+
+        assertThat(user.getResources()).hasSize(3);
+        assertThat(user.getResources(), contains(
+                hasProperty("name", is("audio")),
+                hasProperty("name", is("video")),
+                hasProperty("name", is("image"))
+        ));
+    }
+
+    @Test
+    public void shouldUpdateCreatedResourcesForNewUser() {
+        User user = getUser();
+        user = userRepository.save(user);
+        Folder audioFolder = getFolderByName(user, "audio");
+        String songName = "Beatles - It's been a hard day night";
+        audioFolder.getResources().add(
+                new File(songName, audioFolder, asList(user)));
+
+        userRepository.save(user);
+        user = userRepository.findOne(user.getId());
+
+        audioFolder = getFolderByName(user, "audio");
+        File audio = (File) audioFolder.getResources().get(0);
+        assertEquals(audio.getName(), songName);
     }
 
     private Folder getFolderByName(User user, String name) {

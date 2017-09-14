@@ -1,14 +1,17 @@
 package github.srcmaxim.filesharingsystem.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.validation.constraints.Pattern;
 import java.util.List;
 
-
 @NoArgsConstructor
+@EqualsAndHashCode(exclude = "resources", callSuper = true)
+@ToString(exclude = "resources", callSuper = true)
 @Entity
 @DiscriminatorValue("file")
 public class File extends Resource {
@@ -34,3 +37,4 @@ public class File extends Resource {
     }
 
 }
+

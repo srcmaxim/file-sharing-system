@@ -16,7 +16,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(exclude = "resources", callSuper = true)
-@ToString(exclude = "resources")
+@ToString(exclude = "resources", callSuper = true)
 @Entity
 @DiscriminatorValue("folder")
 public class Folder extends Resource {

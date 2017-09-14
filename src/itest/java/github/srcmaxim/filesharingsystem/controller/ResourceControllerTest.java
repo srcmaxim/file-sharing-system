@@ -154,6 +154,22 @@ public class ResourceControllerTest {
     }
 
     @Test
+    public void shouldNotCreateResourceIfNoCsrfToken() throws Exception {
+        mvc.perform(post("/resources").session(session)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id", "1")
+                .param("name", "name")
+                .param("type", "folder")
+        )
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/resources/1"));
+
+        verify(resourceService, never())
+                .saveResource(resource, null);
+        verifyNoMoreInteractions(resourceService);
+    }
+
+    @Test
     public void shouldUpdateResourceView() throws Exception {
         when(resourceService.findResource(1L)).thenReturn(resource);
 
@@ -204,6 +220,26 @@ public class ResourceControllerTest {
                 .andExpect(view().name("resources/createOrUpdate"))
                 .andExpect(model().attribute("resource", resource))
                 .andExpect(model().attribute("type", is("update")));
+
+        verify(resourceService, never())
+                .updateResource(resource, null);
+        verifyNoMoreInteractions(resourceService);
+    }
+
+    @Test
+    public void shouldNotUpdateResourceIfNoCsrfToken() throws Exception {
+        Resource resource = new Folder(1L, "name", null, null);
+        when(resourceService.updateResource(resource, null))
+                .thenReturn(resource);
+
+        mvc.perform(post("/resources/{id}", 1L).session(session).with(csrf())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id", "1")
+                .param("name", "name")
+                .param("type", "folder")
+        )
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/resources/1"));
 
         verify(resourceService, never())
                 .updateResource(resource, null);

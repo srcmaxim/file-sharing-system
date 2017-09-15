@@ -10,8 +10,8 @@ import javax.validation.constraints.Pattern;
 import java.util.List;
 
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = "resources", callSuper = true)
-@ToString(exclude = "resources", callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @Entity
 @DiscriminatorValue("file")
 public class File extends Resource {

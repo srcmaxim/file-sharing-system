@@ -4,6 +4,7 @@ import github.srcmaxim.filesharingsystem.model.User;
 import github.srcmaxim.filesharingsystem.repository.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class UserServiceTest {
     @Before
     public void init() throws Exception {
         repository = mock(UserRepository.class);
-        service = new UserService(repository);
+        service = new UserService(repository, NoOpPasswordEncoder.getInstance());
         userList = asList(
                 User.createNewUser("Jack", "p1"),
                 User.createNewUser("Jones", "p2")

@@ -54,7 +54,7 @@ public class UserController {
             model.addAttribute("type", "create");
             return "users/createOrUpdate";
         }
-        userService.saveUser(user);
+        user = userService.createUserAccount(user, result);
         return "redirect:/users/" + user.getId();
     }
 

@@ -20,7 +20,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -104,6 +105,9 @@ public class UserControllerTest {
 
     @Test
     public void shouldCreateUser() throws Exception {
+        when(userService.createUserAccount(anyObject(), anyObject()))
+                .thenReturn(user);
+
         mvc.perform(post("/users").session(session).with(csrf())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("id", "1")
@@ -117,7 +121,8 @@ public class UserControllerTest {
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl("/users/1"));
 
-        verify(userService, times(1)).saveUser(user);
+        verify(userService, times(1))
+                .createUserAccount(anyObject(), anyObject());
         verifyNoMoreInteractions(userService);
     }
 

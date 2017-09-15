@@ -3,6 +3,7 @@ package github.srcmaxim.filesharingsystem.model;
 import org.hamcrest.MatcherAssert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -17,6 +18,7 @@ import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 public class UserValidationTest {
 
     private static Validator validator;
+    private static StandardPasswordEncoder encoder = new StandardPasswordEncoder();
 
     @BeforeClass
     public static void setUp() {
@@ -27,7 +29,7 @@ public class UserValidationTest {
     @Test
     public void shouldValidateUser() {
         User user = new User(null,
-                "login", "password",
+                "login", encoder.encode("password"),
                 "Firstname", "Lastname",
                 "email123_email-email.email@email123.email.email","+1(111)-111-1111",
                 null, Collections.emptyList());
@@ -62,7 +64,7 @@ public class UserValidationTest {
     @Test
     public void shouldNotValidateUserWithWrongEmail() {
         User user = new User(null,
-                "login", "password",
+                "login", encoder.encode("password"),
                 "Firstname", "Lastname",
                 "email_email/-email.email@email.email.email123","+1(111)-111-1111",
                 null, Collections.emptyList());
@@ -74,7 +76,7 @@ public class UserValidationTest {
     @Test
     public void shouldNotValidateUserWithWrongPhone() {
         User user = new User(null,
-                "login", "password",
+                "login", encoder.encode("password"),
                 "Firstname", "Lastname",
                 "email_email-email.email@email.email.email","+a(111)-111-1111",
                 null, Collections.emptyList());

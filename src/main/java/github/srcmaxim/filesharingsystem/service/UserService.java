@@ -1,10 +1,11 @@
 package github.srcmaxim.filesharingsystem.service;
 
 import github.srcmaxim.filesharingsystem.annotation.Loggable;
-import github.srcmaxim.filesharingsystem.dto.RegistrationDto;
+import github.srcmaxim.filesharingsystem.model.GenericUser;
 import github.srcmaxim.filesharingsystem.model.User;
 import github.srcmaxim.filesharingsystem.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -17,10 +18,12 @@ import java.util.List;
 public class UserService {
 
     private UserRepository repository;
+    private PasswordEncoder encoder;
 
     @Autowired
-    public UserService(UserRepository repository) {
+    public UserService(UserRepository repository, PasswordEncoder encoder) {
         this.repository = repository;
+        this.encoder = encoder;
     }
 
     @Transactional(Transactional.TxType.SUPPORTS)
@@ -62,35 +65,37 @@ public class UserService {
     }
 
     @Transactional(Transactional.TxType.REQUIRED)
-    public User createUserAccount(RegistrationDto registrationDto, BindingResult result) {
-        principalsExist(registrationDto, result);
+    public User createUserAccount(GenericUser genericUser, BindingResult result) {
+        principalsExist(genericUser, result);
         if (result.hasErrors()) {
             return null;
         }
-        User user = createUser(registrationDto);
+        User user = createNewUser(genericUser);
         return repository.save(user);
     }
 
-    private User createUser(RegistrationDto registrationDto) {
-        User user = User.createNewUser(registrationDto.getLogin(), registrationDto.getPassword());
+    @Transactional(Transactional.TxType.SUPPORTS)
+    public void principalsExist(GenericUser user, BindingResult result) {
+        if (repository.existsByLogin(user.getLogin())) {
+            result.addError(new FieldError(result.getObjectName(), "login","error.user.login.non-unique"));
+        }
+        if (repository.existsByEmail(user.getEmail())) {
+            result.addError(new FieldError(result.getObjectName(), "email","error.user.email.non-unique"));
+        }
+        if (repository.existsByPhone(user.getPhone())) {
+            result.addError(new FieldError(result.getObjectName(), "phone","error.user.phone.non-unique"));
+        }
+    }
+
+    private User createNewUser(GenericUser registrationDto) {
+        String hashedPassword = encoder.encode(registrationDto.getPassword());
+        User user = User.createNewUser(registrationDto.getLogin(), hashedPassword);
+
         user.setFirstName(registrationDto.getFirstName());
         user.setLastName(registrationDto.getLastName());
         user.setEmail(registrationDto.getEmail());
         user.setPhone(registrationDto.getPhone());
         return user;
-    }
-
-    @Transactional(Transactional.TxType.SUPPORTS)
-    public void principalsExist(RegistrationDto registrationDto, BindingResult result) {
-        if (repository.existsByLogin(registrationDto.getLogin())) {
-            result.addError(new FieldError(result.getObjectName(), "login","error.user.login.non-unique"));
-        }
-        if (repository.existsByEmail(registrationDto.getEmail())) {
-            result.addError(new FieldError(result.getObjectName(), "email","error.user.email.non-unique"));
-        }
-        if (repository.existsByPhone(registrationDto.getPhone())) {
-            result.addError(new FieldError(result.getObjectName(), "phone","error.user.phone.non-unique"));
-        }
     }
 
 }

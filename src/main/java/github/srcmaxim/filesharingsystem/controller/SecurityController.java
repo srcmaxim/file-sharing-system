@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,11 +29,14 @@ public class SecurityController {
 
     private UserService userService;
     private UserPrincipalsService securityService;
+    private PasswordEncoder encoder;
 
     @Autowired
-    public SecurityController(UserService userService, UserPrincipalsService securityService) {
+    public SecurityController(UserService userService, UserPrincipalsService securityService,
+                              PasswordEncoder encoder) {
         this.userService = userService;
         this.securityService = securityService;
+        this.encoder = encoder;
     }
 
     @RequestMapping(value = "/register")
@@ -76,7 +80,7 @@ public class SecurityController {
             return "security/login";
         }
 
-        if (!loginDto.getPassword().equals(userDetails.getPassword())) {
+        if (!encoder.matches(loginDto.getPassword(), userDetails.getPassword())) {
             result.addError(new FieldError(result.getObjectName(), "password", "error.user.password.not-match"));
             model.addAttribute("loginDto", loginDto);
             return "security/login";

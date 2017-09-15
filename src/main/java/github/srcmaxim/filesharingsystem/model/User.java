@@ -24,7 +24,7 @@ import static org.codehaus.groovy.runtime.InvokerHelper.asList;
         @UniqueConstraint(name = "email", columnNames = "email"),
         @UniqueConstraint(name = "phone", columnNames = "phone")
 })
-public class User {
+public class User implements GenericUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,8 +33,9 @@ public class User {
     @Size(min = 4, max = 16, message = "error.user.login.size")
     @Pattern(regexp = "[A-z\\d]*", message = "error.user.login.pattern")
     private String login;
+    /** password represented as 80 character hex string */
     @NotNull(message = "error.user.password.non-null")
-    @Size(min = 6, max = 16, message = "error.user.password.size")
+    @Size(min = 80, max = 80, message = "error.user.password.size")
     @Pattern(regexp = "[A-z\\d]*", message = "error.user.password.pattern")
     private String password;
     @NotNull(message = "error.user.first-name.non-null")

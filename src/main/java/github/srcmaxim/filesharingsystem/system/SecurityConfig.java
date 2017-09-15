@@ -4,11 +4,11 @@ import github.srcmaxim.filesharingsystem.service.UserPrincipalsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static github.srcmaxim.filesharingsystem.model.Authority.ROLE_ADMIN;
@@ -20,6 +20,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserPrincipalsService userPrincipalsService;
+    @Autowired
+    private PasswordEncoder encoder;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -38,16 +40,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
+    public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userPrincipalsService);
-        authProvider.setPasswordEncoder(encoder());
+        authProvider.setPasswordEncoder(encoder);
         return authProvider;
-    }
-
-    @Bean
-    public PasswordEncoder encoder() {
-        return new BCryptPasswordEncoder(11);
     }
 
 }

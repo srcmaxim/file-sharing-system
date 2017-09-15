@@ -5,22 +5,23 @@ import github.srcmaxim.filesharingsystem.model.Folder;
 import github.srcmaxim.filesharingsystem.model.Resource;
 import github.srcmaxim.filesharingsystem.model.User;
 import github.srcmaxim.filesharingsystem.system.DbConfig;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.transaction.Transactional;
 import java.util.List;
 
-
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
 import static org.junit.Assert.assertEquals;
 
@@ -35,13 +36,17 @@ public class ResourceRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
-    private static User getUser() {
-        User user = User.createNewUser("userLogin", "userPassword");
+    private User user;
+
+    @Before
+    public void setup() {
+        String password = new StandardPasswordEncoder().encode("userPassword");
+        User user = User.createNewUser("userLogin", password);
         user.setFirstName("firstName");
         user.setLastName("lastName");
         user.setEmail("user_user-user.user@user.user");
         user.setPhone("+3(099)-123-4567");
-        return user;
+        this.user = user;
     }
 
     @Test
@@ -53,7 +58,6 @@ public class ResourceRepositoryTest {
 
     @Test
     public void shouldFindCreatedResourcesForNewUser() {
-        User user = getUser();
         userRepository.save(user);
 
         user = userRepository.findOne(user.getId());
@@ -67,7 +71,6 @@ public class ResourceRepositoryTest {
 
     @Test
     public void shouldCreatedAudioVideoImageResourcesForNewUser() {
-        User user = getUser();
         user = userRepository.save(user);
         user = userRepository.findOne(user.getId());
 
@@ -81,7 +84,6 @@ public class ResourceRepositoryTest {
 
     @Test
     public void shouldUpdateCreatedResourcesForNewUser() {
-        User user = getUser();
         user = userRepository.save(user);
         Folder audioFolder = getFolderByName(user, "audio");
         String songName = "Beatles - It's been a hard day night";

@@ -1,9 +1,14 @@
 package github.srcmaxim.filesharingsystem.system;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.core.env.Environment;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
@@ -12,7 +17,11 @@ import javax.validation.Validator;
 import java.util.Locale;
 
 @Configuration
+@PropertySource("classpath:application.properties")
 public class Config {
+
+    @Autowired
+    private Environment env;
 
     @Bean
     public Validator validator() {
@@ -32,6 +41,11 @@ public class Config {
         CookieLocaleResolver cookieLocaleResolver = new CookieLocaleResolver();
         cookieLocaleResolver.setDefaultLocale(Locale.ENGLISH);
         return cookieLocaleResolver;
+    }
+
+    @Bean
+    public PasswordEncoder encoder() {
+        return new StandardPasswordEncoder(env.getProperty("server.secret"));
     }
 
 }

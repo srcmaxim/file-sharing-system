@@ -1,32 +1,43 @@
 package github.srcmaxim.filesharingsystem.mapper;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.core.MethodParameter;
+import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.annotation.ModelAttributeMethodProcessor;
+import org.springframework.web.method.annotation.ModelFactory;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
+import org.springframework.web.method.support.ModelAndViewContainer;
 import org.springframework.web.servlet.HandlerMapping;
-import org.springframework.web.servlet.mvc.method.annotation.ServletModelAttributeMethodProcessor;
-import org.springframework.web.servlet.mvc.method.annotation.ServletRequestDataBinderFactory;
 
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.lang.annotation.Annotation;
 import java.util.Map;
 
 /**
  * A Servlet-specific {@link ModelAttributeMethodProcessor} that applies data
  * binding through a WebDataBinder of type {@link ServletRequestDataBinder}.
+ * Is a specific implementation of {@Link ServletModelAttributeMethodProcessor}.
  * Main difference from {@Link ServletModelAttributeMethodProcessor} --
  * require own implementation of {@code createAttribute()} method.
- *
+ * <p>
  * <p>Also adds an {@code getIdAttribute()} realization for implementation classes.
  */
-public abstract class ValidatableMethodProcessor extends ModelAttributeMethodProcessor {
+public abstract class ValidatableMethodProcessor implements HandlerMethodArgumentResolver, HandlerMethodReturnValueHandler {
 
-    public ValidatableMethodProcessor() {
-        super(false);
+    /**
+     * Return {@code true} if there is a method-level in default resolution mode,
+     * for any return value type that is not a simple type.
+     */
+    @Override
+    public boolean supportsReturnType(MethodParameter returnType) {
+        return !BeanUtils.isSimpleProperty(returnType.getParameterType());
     }
 
     /**
@@ -45,17 +56,71 @@ public abstract class ValidatableMethodProcessor extends ModelAttributeMethodPro
     protected abstract Class<?> supportsType();
 
     /**
+     * Add non-null return values to the {@link ModelAndViewContainer}.
+     */
+    @Override
+    public void handleReturnValue(Object returnValue, MethodParameter returnType,
+                                  ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {
+
+        if (returnValue != null) {
+            String name = ModelFactory.getNameForReturnValue(returnValue, returnType);
+            mavContainer.addAttribute(name, returnValue);
+        }
+    }
+
+    /**
+     * Resolve the argument from the model and validated.
+     */
+    @Override
+    public final Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+                                        NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+        String name = ModelFactory.getNameForParameter(parameter);
+        Object attribute = createAttribute(name, parameter, binderFactory, webRequest);
+
+        WebDataBinder binder = binderFactory.createBinder(webRequest, attribute, name);
+        if (binder.getTarget() != null) {
+            validate(binder, parameter);
+        }
+
+        // Add resolved attribute and BindingResult at the end of the model
+        Map<String, Object> bindingResultModel = binder.getBindingResult().getModel();
+        mavContainer.removeAttributes(bindingResultModel);
+        mavContainer.addAllAttributes(bindingResultModel);
+
+        return binder.convertIfNecessary(binder.getTarget(), parameter.getParameterType(), parameter);
+    }
+
+    /**
      * @return attribute created form request.
      */
     protected abstract Object createAttribute(String attributeName, MethodParameter methodParam, WebDataBinderFactory binderFactory, NativeWebRequest request);
 
     /**
+     * Validate the model attribute if applicable.
+     * <p>The default implementation checks for {@code @javax.validation.Valid},
+     * Spring's {@link org.springframework.validation.annotation.Validated},
+     * and custom annotations whose name starts with "Valid".
+     *
+     * @param binder      the DataBinder to be used
+     * @param methodParam the method parameter
+     */
+    protected void validate(WebDataBinder binder, MethodParameter methodParam) {
+        Annotation ann = methodParam.getParameterAnnotation(Valid.class);
+        Validated validatedAnn = AnnotationUtils.getAnnotation(ann, Validated.class);
+        if (validatedAnn != null || ann.annotationType().getSimpleName().startsWith("Valid")) {
+            Object hints = (validatedAnn != null ? validatedAnn.value() : AnnotationUtils.getValue(ann));
+            Object[] validationHints = (hints instanceof Object[] ? (Object[]) hints : new Object[]{hints});
+            binder.validate(validationHints);
+        }
+    }
+
+    /**
      * Returns id parameter/attribute of given Attribute.
      *
-     * @return      id parameter/attribute is such order:
-     *              1. idAtribute -- if can be parsed
-     *              2. idParameter -- if can be parsed
-     *              3. null
+     * @return id parameter/attribute is such order:
+     * 1. idAtribute -- if can be parsed
+     * 2. idParameter -- if can be parsed
+     * 3. null
      */
     protected final Long getIdAttribute(NativeWebRequest webRequest) {
         String idAtribute = ((Map<String, String>) webRequest.getNativeRequest(HttpServletRequest.class)
@@ -74,22 +139,6 @@ public abstract class ValidatableMethodProcessor extends ModelAttributeMethodPro
         } catch (NumberFormatException e) {
             return defaultNumber;
         }
-    }
-
-    /**
-     * The method is a strait realization from
-     * {@Link ServletModelAttributeMethodProcessor#bindRequestParameters()}.
-     * This implementation downcasts {@link WebDataBinder} to
-     * {@link ServletRequestDataBinder} before binding.
-     * Primary uses in {@Link BindingResult} parameter of the controller method.
-     * @see ServletRequestDataBinderFactory
-     * @see ServletModelAttributeMethodProcessor
-     */
-    @Override
-    protected void bindRequestParameters(WebDataBinder binder, NativeWebRequest request) {
-        ServletRequest servletRequest = request.getNativeRequest(ServletRequest.class);
-        ServletRequestDataBinder servletBinder = (ServletRequestDataBinder) binder;
-        servletBinder.bind(servletRequest);
     }
 
 }

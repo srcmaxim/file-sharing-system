@@ -1,6 +1,7 @@
 package github.srcmaxim.filesharingsystem.dto;
 
 import github.srcmaxim.filesharingsystem.annotation.Equals;
+import github.srcmaxim.filesharingsystem.model.GenericUser;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,7 @@ import javax.validation.constraints.Size;
 @ToString(exclude = {"password", "passwordConfirmation"})
 @Equals(firstField = "password", secondField = "passwordConfirmation",
         message = "error.user.password.not-equals")
-public class RegistrationDto {
+public class RegistrationDto implements GenericUser {
 
     @NotNull(message = "error.user.login.non-null")
     @Size(min = 4, max = 16, message = "error.user.login.size")

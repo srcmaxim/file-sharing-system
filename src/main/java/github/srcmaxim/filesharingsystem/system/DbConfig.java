@@ -14,6 +14,8 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import javax.sql.DataSource;
 import java.util.Properties;
 
+import static github.srcmaxim.filesharingsystem.util.PropertyHolder.getVariableOrException;
+
 @Configuration
 @PropertySource("classpath:application.properties")
 public class DbConfig {
@@ -27,14 +29,9 @@ public class DbConfig {
     @Autowired
     public DbConfig(Environment env) {
         this.env = env;
-        this.url = getEnvironmentVar("DB_URL", env.getProperty("db.default-url"));
-        this.user = getEnvironmentVar("DB_USER", env.getProperty("db.default-user"));
-        this.password = getEnvironmentVar("DB_PWD", env.getProperty("db.default-password"));
-    }
-
-    private String getEnvironmentVar(String key, String defaultVar) {
-        String envVar = System.getenv(key);
-        return envVar != null ? envVar : defaultVar;
+        this.url = getVariableOrException(env, "DB_URL", "db.default-url");
+        this.user = getVariableOrException(env,"DB_USER", "db.default-user");
+        this.password = getVariableOrException(env,"DB_PWD", "db.default-password");
     }
 
     @Bean

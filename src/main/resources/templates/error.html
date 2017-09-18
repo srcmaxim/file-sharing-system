@@ -19,7 +19,7 @@
         <br/>
         <div class="lead">Exception: <b th:text="${exception}"/> at time: <b th:text="${T(java.time.LocalDateTime).now()}"/></div>
         <br/>
-        <a class="btn btn-success btn-lg" href="#" th:href="@{/}">Back to the Home Page</a>
+        <a class="btn btn-success btn-lg" href="#" th:href="@{/}" th:text="#{error.back}">Back to the Home page</a>
     </div>
 </div>
 

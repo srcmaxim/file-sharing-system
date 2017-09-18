@@ -23,7 +23,7 @@ public class UserServiceTest {
     @Before
     public void init() throws Exception {
         repository = mock(UserRepository.class);
-        service = new UserService(repository, NoOpPasswordEncoder.getInstance());
+        service = new UserService(repository, null, NoOpPasswordEncoder.getInstance());
         userList = asList(
                 User.createNewUser("Jack", "p1"),
                 User.createNewUser("Jones", "p2")

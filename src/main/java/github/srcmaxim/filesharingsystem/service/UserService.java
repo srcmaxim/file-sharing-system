@@ -4,12 +4,14 @@ import github.srcmaxim.filesharingsystem.annotation.Loggable;
 import github.srcmaxim.filesharingsystem.model.GenericUser;
 import github.srcmaxim.filesharingsystem.model.User;
 import github.srcmaxim.filesharingsystem.repository.UserRepository;
+import github.srcmaxim.filesharingsystem.util.PasswordGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
+import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -18,11 +20,13 @@ import java.util.List;
 public class UserService {
 
     private UserRepository repository;
+    private EmailService emailService;
     private PasswordEncoder encoder;
 
     @Autowired
-    public UserService(UserRepository repository, PasswordEncoder encoder) {
+    public UserService(UserRepository repository, EmailService emailService, PasswordEncoder encoder) {
         this.repository = repository;
+        this.emailService = emailService;
         this.encoder = encoder;
     }
 
@@ -34,6 +38,11 @@ public class UserService {
     @Transactional(Transactional.TxType.SUPPORTS)
     public User findUser(Long id) {
         return repository.findOne(id);
+    }
+
+    @Transactional(Transactional.TxType.SUPPORTS)
+    public User findUserByEmail(String email) {
+        return repository.findByEmail(email);
     }
 
     @Transactional(Transactional.TxType.REQUIRED)
@@ -77,13 +86,13 @@ public class UserService {
     @Transactional(Transactional.TxType.SUPPORTS)
     public void principalsExist(GenericUser user, BindingResult result) {
         if (repository.existsByLogin(user.getLogin())) {
-            result.addError(new FieldError(result.getObjectName(), "login","error.user.login.non-unique"));
+            result.addError(new FieldError(result.getObjectName(), "login", "error.user.login.non-unique"));
         }
         if (repository.existsByEmail(user.getEmail())) {
-            result.addError(new FieldError(result.getObjectName(), "email","error.user.email.non-unique"));
+            result.addError(new FieldError(result.getObjectName(), "email", "error.user.email.non-unique"));
         }
         if (repository.existsByPhone(user.getPhone())) {
-            result.addError(new FieldError(result.getObjectName(), "phone","error.user.phone.non-unique"));
+            result.addError(new FieldError(result.getObjectName(), "phone", "error.user.phone.non-unique"));
         }
     }
 
@@ -96,6 +105,19 @@ public class UserService {
         user.setEmail(registrationDto.getEmail());
         user.setPhone(registrationDto.getPhone());
         return user;
+    }
+
+    @Transactional(Transactional.TxType.REQUIRED)
+    public void changePassword(String email) throws MessagingException {
+        User user = findUserByEmail(email);
+        PasswordGenerator passwordGenerator = new PasswordGenerator.PasswordGeneratorBuilder()
+                .useLower(true)
+                .useUpper(true)
+                .useDigits(true)
+                .build();
+        String password = passwordGenerator.generate(16);
+        user.setPassword(encoder.encode(password));
+        emailService.sendPasswordTo(user, password);
     }
 
 }

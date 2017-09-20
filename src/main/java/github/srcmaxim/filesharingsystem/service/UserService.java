@@ -5,6 +5,7 @@ import github.srcmaxim.filesharingsystem.model.GenericUser;
 import github.srcmaxim.filesharingsystem.model.User;
 import github.srcmaxim.filesharingsystem.repository.UserRepository;
 import github.srcmaxim.filesharingsystem.util.PasswordGenerator;
+import org.hibernate.validator.internal.constraintvalidators.bv.PatternValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,8 @@ import org.springframework.validation.FieldError;
 
 import javax.mail.MessagingException;
 import javax.transaction.Transactional;
+import javax.validation.constraints.Pattern;
+import java.lang.reflect.Field;
 import java.util.List;
 
 @Service
@@ -108,8 +111,12 @@ public class UserService {
     }
 
     @Transactional(Transactional.TxType.REQUIRED)
-    public void changePassword(String email) throws MessagingException {
+    public void changePassword(String email) {
+        validateUserEmail(email);
         User user = findUserByEmail(email);
+        if (user == null) {
+            throw new ServiceException("error.user.email.no-email");
+        }
         PasswordGenerator passwordGenerator = new PasswordGenerator.PasswordGeneratorBuilder()
                 .useLower(true)
                 .useUpper(true)
@@ -117,7 +124,28 @@ public class UserService {
                 .build();
         String password = passwordGenerator.generate(16);
         user.setPassword(encoder.encode(password));
-        emailService.sendPasswordTo(user, password);
+        try {
+            emailService.sendPasswordTo(user, password);
+        } catch (MessagingException e) {
+            throw new ServiceException("forgot.error");
+        }
+    }
+
+    private static void validateUserEmail(String email) {
+        PatternValidator validator = new PatternValidator();
+        validator.initialize(emailPattern());
+        if(!validator.isValid(email, null)) {
+            throw new ServiceException("error.user.email.non-valid");
+        }
+    }
+
+    private static Pattern emailPattern() {
+        try {
+            Field email = User.class.getDeclaredField("email");
+            return email.getAnnotation(Pattern.class);
+        } catch (NoSuchFieldException e) {
+            return null;
+        }
     }
 
 }

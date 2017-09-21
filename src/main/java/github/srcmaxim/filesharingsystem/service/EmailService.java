@@ -21,11 +21,11 @@ public class EmailService {
         this.mailSender = mailSender;
     }
 
-    public void sendPasswordTo(User user, String password) throws MessagingException {
+    public void sendPasswordTo(User user) throws MessagingException {
         String emailMessage = "Dear " + user.getFirstName() + " "
                 + user.getLastName()
                 + ", your new password is "
-                + password;
+                + user.getPassword();
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper;

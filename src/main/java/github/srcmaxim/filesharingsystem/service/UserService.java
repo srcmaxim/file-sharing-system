@@ -125,7 +125,7 @@ public class UserService {
         String password = passwordGenerator.generate(16);
         user.setPassword(encoder.encode(password));
         try {
-            emailService.sendPasswordTo(user, password);
+            emailService.sendPasswordTo(user);
         } catch (MessagingException e) {
             throw new ServiceException("forgot.error");
         }

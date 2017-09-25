@@ -42,6 +42,12 @@
                 <a sec:authorize="isAuthenticated()" class="btn btn-outline-success" href="#" th:href="@{/logout}"
                    authorities="button" th:text="#{header.logout}">Logout</a>
             </div>
+
+
+            <div class="btn-group text-success">
+                <a class="btn btn-outline-success" href="?lang=en">en</a>
+                <a class="btn btn-outline-success" href="?lang=ru">ru</a>
+            </div>
         </div>
     </nav>
 </header>

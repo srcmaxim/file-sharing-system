@@ -10,14 +10,12 @@
 </head>
 <body>
 
-<div th:replace="/fragments/header :: header('error')">Header</div>
+<div th:replace="/fragments/header :: header('aware')">Header</div>
 
 <div class="container">
-    <div class="jumbotron text-center">
-        <h1 class="display-1"><strong>404</strong></h1>
-        <img src="/static/img/frog-icon-256.png" alt="frog"/>
-        <br/>
-        <div class="lead" th:text="#{error.page-not-exist}">Sorry this page doesn't exist</div>
+    <div class="jumbotron" th:classappend="${group} == error ? alert-danger  : alert-info">
+        <h1><span th:text="#{'aware.' + ${group}}"/></h1>
+        <h3><span th:text="#{'aware.' + ${type}}"/></h3>
         <br/>
         <a class="btn btn-success btn-lg" href="#" th:href="@{/}" th:text="#{aware.back}">Back to the Home page</a>
     </div>

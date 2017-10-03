@@ -54,6 +54,8 @@ public class User implements GenericUser {
     @Pattern(regexp = "\\+\\d\\(\\d{3}\\)\\-\\d{3}\\-\\d{4}",
             message = "error.user.phone.non-valid")
     private String phone;
+    @Column(nullable = false, columnDefinition="boolean default true")
+    private boolean enabled;
 
     @ElementCollection(targetClass = Authority.class, fetch = FetchType.EAGER)
     @JoinTable(name = "authority", joinColumns = @JoinColumn(name = "user_id"))
@@ -65,9 +67,10 @@ public class User implements GenericUser {
     @ManyToMany(mappedBy = "users", cascade = {CascadeType.PERSIST})
     private List<Resource> resources = new ArrayList<>();
 
-    public User(String login, String password, Set<Authority> authorities) {
+    private User(String login, String password, Set<Authority> authorities) {
         this.login = login;
         this.password = password;
+        this.enabled = false;
         this.authorities.addAll(authorities);
     }
 

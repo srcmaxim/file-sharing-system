@@ -55,10 +55,12 @@ public class UserControllerTest {
                 new User(1L, "user1", "12345qaz",
                         "Firstname", "Lastname",
                         "+1(111)-111-1111", "user1@gmail.com",
+                        true,
                         null, null),
                 new User(2L, "user2", "12345qaz",
                         "Firstname", "Lastname",
                         "+2(222)-222-2222", "user2@gmail.com",
+                        true,
                         null, null)
         );
         user = users.get(0);
@@ -131,6 +133,7 @@ public class UserControllerTest {
         User user = new User(1L, "user1", "12345qaz",
                 "Bad name", "Bad name",
                 "Bad email", "Bad phone",
+                true,
                 null, null);
         mvc.perform(post("/users").session(session).with(csrf())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -210,6 +213,7 @@ public class UserControllerTest {
         User user = new User(1L, "user1", "12345qaz",
                 "Bad name", "Bad name",
                 "Bad email", "Bad phone",
+                true,
                 null, null);
 
         mvc.perform(post("/users/{id}", 1L).session(session).with(csrf())

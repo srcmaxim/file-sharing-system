@@ -32,6 +32,7 @@ public class UserValidationTest {
                 "login", encoder.encode("password"),
                 "Firstname", "Lastname",
                 "email123_email-email.email@email123.email.email","+1(111)-111-1111",
+                true,
                 null, Collections.emptyList());
         Set<ConstraintViolation<User>> validate = validator.validate(user);
 
@@ -44,6 +45,7 @@ public class UserValidationTest {
                 "", "",
                 "", "",
                 "","",
+                true,
                 null, Collections.emptyList());
         Set<ConstraintViolation<User>> validate = validator.validate(user);
 
@@ -55,6 +57,7 @@ public class UserValidationTest {
                 null,null,
                 null,null,
                 null,null,
+                true,
                 null, Collections.emptyList());
         Set<ConstraintViolation<User>> validate = validator.validate(user);
 
@@ -67,6 +70,7 @@ public class UserValidationTest {
                 "login", encoder.encode("password"),
                 "Firstname", "Lastname",
                 "email_email/-email.email@email.email.email123","+1(111)-111-1111",
+                true,
                 null, Collections.emptyList());
         Set<ConstraintViolation<User>> validate = validator.validate(user);
 
@@ -79,6 +83,7 @@ public class UserValidationTest {
                 "login", encoder.encode("password"),
                 "Firstname", "Lastname",
                 "email_email-email.email@email.email.email","+a(111)-111-1111",
+                true,
                 null, Collections.emptyList());
         Set<ConstraintViolation<User>> validate = validator.validate(user);
 

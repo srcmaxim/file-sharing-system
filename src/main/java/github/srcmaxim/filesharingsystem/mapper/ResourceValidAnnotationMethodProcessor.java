@@ -16,7 +16,7 @@ import org.springframework.web.context.request.NativeWebRequest;
  *
  * @see ValidatableMethodProcessor
  */
-public class ResourceValidatableMethodProcessor extends ValidatableMethodProcessor {
+public class ResourceValidAnnotationMethodProcessor extends ValidatableMethodProcessor {
 
     @Override
     public Class<?> supportsType() {

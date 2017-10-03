@@ -14,11 +14,11 @@ import org.springframework.web.context.request.NativeWebRequest;
  *
  * @see ValidatableMethodProcessor
  */
-public class UserValidatableMethodProcessor extends ValidatableMethodProcessor {
+public class UserValidAnnotationMethodProcessor extends ValidatableMethodProcessor {
 
     private PasswordEncoder encoder;
 
-    public UserValidatableMethodProcessor(PasswordEncoder encoder) {
+    public UserValidAnnotationMethodProcessor(PasswordEncoder encoder) {
         this.encoder = encoder;
     }
 
@@ -49,7 +49,12 @@ public class UserValidatableMethodProcessor extends ValidatableMethodProcessor {
         String email = request.getParameter("email");
         String phone = request.getParameter("phone");
 
-        return new User(id, login, password, firstName, lastName, email, phone, null, null);
+        return new User(id,
+                login, password,
+                firstName, lastName,
+                email, phone,
+                false,
+                null, null);
     }
 
 }

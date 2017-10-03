@@ -1,7 +1,7 @@
 package github.srcmaxim.filesharingsystem.system;
 
-import github.srcmaxim.filesharingsystem.mapper.ResourceValidatableMethodProcessor;
-import github.srcmaxim.filesharingsystem.mapper.UserValidatableMethodProcessor;
+import github.srcmaxim.filesharingsystem.mapper.ResourceValidAnnotationMethodProcessor;
+import github.srcmaxim.filesharingsystem.mapper.UserValidAnnotationMethodProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -26,8 +26,8 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-        argumentResolvers.add(new ResourceValidatableMethodProcessor());
-        argumentResolvers.add(new UserValidatableMethodProcessor(encoder));
+        argumentResolvers.add(new ResourceValidAnnotationMethodProcessor());
+        argumentResolvers.add(new UserValidAnnotationMethodProcessor(encoder));
     }
 
     @Override

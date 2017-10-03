@@ -4,9 +4,11 @@ import github.srcmaxim.filesharingsystem.annotation.Loggable;
 import github.srcmaxim.filesharingsystem.dto.LoginDto;
 import github.srcmaxim.filesharingsystem.dto.RegistrationDto;
 import github.srcmaxim.filesharingsystem.model.User;
+import github.srcmaxim.filesharingsystem.service.ServiceException;
 import github.srcmaxim.filesharingsystem.service.UserPrincipalsService;
 import github.srcmaxim.filesharingsystem.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +22,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 
@@ -51,11 +54,21 @@ public class SecurityController {
         if (!result.hasErrors()) {
             User registered = userService.createUserAccount(registrationDto, result);
             if (registered != null && !result.hasErrors()) {
-                return "redirect:/login";
+                return "redirect:/info?type=get-verification-token-email";
             }
         }
         model.addAttribute("registrationDto", registrationDto);
         return "security/register";
+    }
+
+    @RequestMapping(value = "/register", params = "token")
+    public String completeRegistration(@RequestParam String token, Model model) {
+        try {
+            userService.completeRegistration(token);
+        } catch (ServiceException e){
+            return "redirect:/error?type=" + e.getMessage();
+        }
+        return "redirect:/login";
     }
 
     @RequestMapping(value = "/login")
@@ -74,7 +87,7 @@ public class SecurityController {
         UserDetails userDetails;
         try {
             userDetails = securityService.loadUserByUsername(loginDto.getLogin());
-        } catch (UsernameNotFoundException e) {
+        } catch (UsernameNotFoundException | AccountExpiredException e) {
             result.addError(new FieldError(result.getObjectName(), "login", e.getMessage()));
             model.addAttribute("loginDto", loginDto);
             return "security/login";

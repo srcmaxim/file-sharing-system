@@ -3,7 +3,9 @@ package github.srcmaxim.filesharingsystem.service;
 import github.srcmaxim.filesharingsystem.annotation.Loggable;
 import github.srcmaxim.filesharingsystem.model.GenericUser;
 import github.srcmaxim.filesharingsystem.model.User;
+import github.srcmaxim.filesharingsystem.model.VerificationToken;
 import github.srcmaxim.filesharingsystem.repository.UserRepository;
+import github.srcmaxim.filesharingsystem.repository.VerificationTokenRepository;
 import github.srcmaxim.filesharingsystem.util.PasswordGenerator;
 import org.hibernate.validator.internal.constraintvalidators.bv.PatternValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,56 +24,59 @@ import java.util.List;
 @Loggable
 public class UserService {
 
-    private UserRepository repository;
+    private UserRepository userRepository;
+    private final VerificationTokenRepository tokenRepository;
     private EmailService emailService;
     private PasswordEncoder encoder;
 
     @Autowired
-    public UserService(UserRepository repository, EmailService emailService, PasswordEncoder encoder) {
-        this.repository = repository;
+    public UserService(UserRepository userRepository, VerificationTokenRepository tokenRepository,
+                       EmailService emailService, PasswordEncoder encoder) {
+        this.userRepository = userRepository;
+        this.tokenRepository = tokenRepository;
         this.emailService = emailService;
         this.encoder = encoder;
     }
 
     @Transactional(Transactional.TxType.SUPPORTS)
     public List<User> findUsers() {
-        return repository.findAll();
+        return userRepository.findAll();
     }
 
     @Transactional(Transactional.TxType.SUPPORTS)
     public User findUser(Long id) {
-        return repository.findOne(id);
+        return userRepository.findOne(id);
     }
 
     @Transactional(Transactional.TxType.SUPPORTS)
     public User findUserByEmail(String email) {
-        return repository.findByEmail(email);
+        return userRepository.findByEmail(email);
     }
 
     @Transactional(Transactional.TxType.REQUIRED)
     public User saveUser(User user) {
-        return repository.save(user);
+        return userRepository.save(user);
     }
 
     @Transactional(Transactional.TxType.REQUIRED)
     public User deleteUser(Long id) {
         User user = findUser(id);
         if (user != null) {
-            repository.delete(id);
+            userRepository.delete(id);
         }
         return user;
     }
 
     @Transactional(Transactional.TxType.REQUIRED)
     public User updateUser(User user) {
-        User oldUser = repository.findOne(user.getId());
+        User oldUser = userRepository.findOne(user.getId());
         oldUser.setLogin(user.getLogin());
         oldUser.setPassword(user.getPassword());
         oldUser.setFirstName(user.getFirstName());
         oldUser.setLastName(user.getLastName());
         oldUser.setEmail(user.getEmail());
         oldUser.setPhone(user.getPhone());
-        repository.save(oldUser);
+        userRepository.save(oldUser);
         user.setId(oldUser.getId());
         return user;
     }
@@ -83,18 +88,26 @@ public class UserService {
             return null;
         }
         User user = createNewUser(genericUser);
-        return repository.save(user);
+        user = userRepository.save(user);
+        VerificationToken token = new VerificationToken(user);
+        tokenRepository.save(token);
+        try {
+            emailService.sendVerificationToken(token);
+        } catch (MessagingException e) {
+            throw new ServiceException("aware.mail-service-not-working");
+        }
+        return user;
     }
 
     @Transactional(Transactional.TxType.SUPPORTS)
     public void principalsExist(GenericUser user, BindingResult result) {
-        if (repository.existsByLogin(user.getLogin())) {
+        if (userRepository.existsByLogin(user.getLogin())) {
             result.addError(new FieldError(result.getObjectName(), "login", "error.user.login.non-unique"));
         }
-        if (repository.existsByEmail(user.getEmail())) {
+        if (userRepository.existsByEmail(user.getEmail())) {
             result.addError(new FieldError(result.getObjectName(), "email", "error.user.email.non-unique"));
         }
-        if (repository.existsByPhone(user.getPhone())) {
+        if (userRepository.existsByPhone(user.getPhone())) {
             result.addError(new FieldError(result.getObjectName(), "phone", "error.user.phone.non-unique"));
         }
     }
@@ -146,6 +159,26 @@ public class UserService {
         } catch (NoSuchFieldException e) {
             return null;
         }
+    }
+
+    @Transactional(Transactional.TxType.SUPPORTS)
+    public VerificationToken getVerificationToken(String token) {
+        return tokenRepository.findByToken(token);
+    }
+
+    @Transactional(Transactional.TxType.REQUIRED)
+    public void completeRegistration(String token) {
+        VerificationToken verificationToken = getVerificationToken(token);
+        if (verificationToken == null) {
+            throw new ServiceException("no-such-token");
+        }
+        User user = verificationToken.getUser();
+        if (verificationToken.isExpired()) {
+            throw new ServiceException("expired-token");
+        }
+        user.setEnabled(true);
+        userRepository.save(user);
+        tokenRepository.delete(verificationToken);
     }
 
 }

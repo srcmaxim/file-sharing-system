@@ -1,10 +1,11 @@
 package github.srcmaxim.filesharingsystem.service;
 
+import github.srcmaxim.filesharingsystem.annotation.Loggable;
 import github.srcmaxim.filesharingsystem.model.User;
 import github.srcmaxim.filesharingsystem.model.UserPrincipals;
 import github.srcmaxim.filesharingsystem.repository.UserRepository;
-import github.srcmaxim.filesharingsystem.annotation.Loggable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,9 @@ public class UserPrincipalsService implements UserDetailsService {
         User user = repository.findByLogin(username);
         if (user == null) {
             throw new UsernameNotFoundException("error.user.login.not-found");
+        }
+        if (!user.isEnabled()) {
+            throw new AccountExpiredException("error.user.enabled.email-not-verified");
         }
         return new UserPrincipals(user);
     }

@@ -87,10 +87,12 @@ public class SecurityController {
         UserDetails userDetails;
         try {
             userDetails = securityService.loadUserByUsername(loginDto.getLogin());
-        } catch (UsernameNotFoundException | AccountExpiredException e) {
+        } catch (UsernameNotFoundException e) {
             result.addError(new FieldError(result.getObjectName(), "login", e.getMessage()));
             model.addAttribute("loginDto", loginDto);
             return "security/login";
+        } catch (AccountExpiredException e) {
+            return "redirect:/info?type=" + e.getMessage();
         }
 
         if (!encoder.matches(loginDto.getPassword(), userDetails.getPassword())) {

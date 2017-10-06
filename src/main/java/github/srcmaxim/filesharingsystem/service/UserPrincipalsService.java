@@ -31,7 +31,7 @@ public class UserPrincipalsService implements UserDetailsService {
             throw new UsernameNotFoundException("error.user.login.not-found");
         }
         if (!user.isEnabled()) {
-            throw new AccountExpiredException("error.user.enabled.email-not-verified");
+            throw new AccountExpiredException("email-not-verified");
         }
         return new UserPrincipals(user);
     }

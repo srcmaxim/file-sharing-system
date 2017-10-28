@@ -49,10 +49,16 @@ public class SecurityController {
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String register(@ModelAttribute("registrationDto") @Valid RegistrationDto registrationDto,
+    public String register(@ModelAttribute("registrationDto")
+                           @Valid RegistrationDto registrationDto,
                            BindingResult result, Model model) {
         if (!result.hasErrors()) {
-            User registered = userService.createUserAccount(registrationDto, result);
+            User registered = null;
+            try {
+                registered = userService.createUserAccount(registrationDto, result);
+            } catch (ServiceException e) {
+                return "redirect:/error?type=" + e.getMessage();
+            }
             if (registered != null && !result.hasErrors()) {
                 return "redirect:/info?type=get-verification-token-email";
             }
@@ -61,11 +67,11 @@ public class SecurityController {
         return "security/register";
     }
 
-    @RequestMapping(value = "/register", params = "token")
+    @RequestMapping(value = "/verification", params = "token")
     public String completeRegistration(@RequestParam String token, Model model) {
         try {
             userService.completeRegistration(token);
-        } catch (ServiceException e){
+        } catch (ServiceException e) {
             return "redirect:/error?type=" + e.getMessage();
         }
         return "redirect:/login";
@@ -102,7 +108,7 @@ public class SecurityController {
         }
 
         Authentication auth = new UsernamePasswordAuthenticationToken(
-                userDetails.getUsername (),userDetails.getPassword (),userDetails.getAuthorities ());
+                userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(auth);
 
         return "redirect:/users";

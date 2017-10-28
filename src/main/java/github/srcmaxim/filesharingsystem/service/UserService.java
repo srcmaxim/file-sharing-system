@@ -94,7 +94,7 @@ public class UserService {
         try {
             emailService.sendVerificationToken(token);
         } catch (MessagingException e) {
-            throw new ServiceException("aware.mail-service-not-working");
+            throw new ServiceException("mail-service-not-working");
         }
         return user;
     }
@@ -161,23 +161,28 @@ public class UserService {
         }
     }
 
-    @Transactional(Transactional.TxType.SUPPORTS)
-    public VerificationToken getVerificationToken(String token) {
-        return tokenRepository.findByToken(token);
-    }
-
     @Transactional(Transactional.TxType.REQUIRED)
     public void completeRegistration(String token) {
-        VerificationToken verificationToken = getVerificationToken(token);
+        VerificationToken verificationToken = findVerificationToken(token);
+        deleteVerificationToken(verificationToken);
         if (verificationToken == null) {
             throw new ServiceException("no-such-token");
         }
-        User user = verificationToken.getUser();
         if (verificationToken.isExpired()) {
             throw new ServiceException("expired-token");
         }
+        User user = verificationToken.getUser();
         user.setEnabled(true);
-        userRepository.save(user);
+        saveUser(user);
+    }
+
+    @Transactional(Transactional.TxType.SUPPORTS)
+    public VerificationToken findVerificationToken(String token) {
+        return tokenRepository.findByToken(token);
+    }
+
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    public void deleteVerificationToken(VerificationToken verificationToken) {
         tokenRepository.delete(verificationToken);
     }
 

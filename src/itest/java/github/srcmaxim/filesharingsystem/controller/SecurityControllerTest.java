@@ -6,6 +6,8 @@ import github.srcmaxim.filesharingsystem.model.VerificationToken;
 import github.srcmaxim.filesharingsystem.repository.UserRepository;
 import github.srcmaxim.filesharingsystem.repository.VerificationTokenRepository;
 import github.srcmaxim.filesharingsystem.service.EmailService;
+import github.srcmaxim.filesharingsystem.service.ServiceException;
+import github.srcmaxim.filesharingsystem.service.UserPrincipalsService;
 import github.srcmaxim.filesharingsystem.service.UserService;
 import github.srcmaxim.filesharingsystem.system.DbConfig;
 import org.junit.Before;
@@ -13,11 +15,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -31,7 +35,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(UserController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 @Import(DbConfig.class)
 public class SecurityControllerTest {
 
@@ -52,7 +57,13 @@ public class SecurityControllerTest {
     private UserRepository userRepository;
 
     @MockBean
+    private UserPrincipalsService securityService;
+
+    @MockBean
     private VerificationTokenRepository tokenRepository;
+
+    @Autowired
+    private PasswordEncoder encoder;
 
     @BeforeClass
     public static void setupSession() {
@@ -70,7 +81,7 @@ public class SecurityControllerTest {
     }
 
     @Test
-    public void shouldEmailVerificationTokenToUserAndSetUserNotVerifiedWhenRegistrationSuccess() throws Exception {
+    public void shouldMailVerificationTokenToUserAndSetUserNotVerifiedWhenRegistrationSuccess() throws Exception {
         doNothing().when(userService).principalsExist(any(), any());
         when(userService.createUserAccount(any(), any())).thenAnswer(invocation -> {
             try {
@@ -99,6 +110,26 @@ public class SecurityControllerTest {
                 .andExpect(redirectedUrlPattern("/info?type=*"));
 
         assertFalse(user.isEnabled());
+    }
+
+    @Test
+    public void shouldRedirectErrorWhenRegistrationFailed() throws Exception {
+        when(userService.createUserAccount(any(), any())).thenThrow(new ServiceException("mail-service-not-working"));
+
+
+        mvc.perform(post("/register").session(session).with(csrf())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id", user.getId().toString())
+                .param("login", user.getLogin())
+                .param("password", user.getPassword())
+                .param("passwordConfirmation", user.getPassword())
+                .param("firstName", user.getFirstName())
+                .param("lastName", user.getLastName())
+                .param("email", user.getEmail())
+                .param("phone", user.getPhone())
+        )
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrlPattern("/error?type=*"));
     }
 
 }

@@ -12,6 +12,7 @@ import github.srcmaxim.filesharingsystem.service.UserService;
 import github.srcmaxim.filesharingsystem.system.DbConfig;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +28,12 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @RunWith(SpringRunner.class)
@@ -130,6 +132,24 @@ public class SecurityControllerTest {
         )
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrlPattern("/error?type=*"));
+    }
+
+    @Test
+    @Ignore
+    public void shouldSetUserEnabledAndDeleteVerificationTokenWhenTokenOk() throws Exception {
+        VerificationToken token = new VerificationToken(user);
+
+        when(userService.findVerificationToken(token.getToken())).thenReturn(token);
+        doNothing().when(userService).deleteVerificationToken(token);
+        doCallRealMethod().when(userService).completeRegistration(token.getToken());
+
+        mvc.perform(get("/verification").session(session)
+                .param("token", token.getToken())
+        )
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/login"));
+
+        assertTrue(user.isEnabled());
     }
 
 }

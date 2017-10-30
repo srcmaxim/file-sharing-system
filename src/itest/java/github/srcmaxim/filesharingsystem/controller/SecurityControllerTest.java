@@ -152,4 +152,20 @@ public class SecurityControllerTest {
         assertTrue(user.isEnabled());
     }
 
+    @Test
+    public void shouldRedirectErrorWhenNoSuchToken() throws Exception {
+        String token = "aaabbb";
+
+        when(userService.findVerificationToken(token)).thenReturn(null);
+        doCallRealMethod().when(userService).completeRegistration(token);
+
+        mvc.perform(get("/verification").session(session)
+                .param("token", token)
+        )
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrlPattern("/error?type=no-such-token"));
+
+        assertFalse(user.isEnabled());
+    }
+
 }

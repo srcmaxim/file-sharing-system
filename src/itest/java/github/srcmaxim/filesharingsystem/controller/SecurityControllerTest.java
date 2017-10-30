@@ -26,6 +26,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.lang.reflect.Field;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -166,6 +171,36 @@ public class SecurityControllerTest {
                 .andExpect(redirectedUrlPattern("/error?type=no-such-token"));
 
         assertFalse(user.isEnabled());
+    }
+
+    @Test
+    public void shouldRedirectErrorWhenTokenExpired() throws Exception {
+        VerificationToken token = getExpiredToken();
+
+        when(userService.findVerificationToken(token.getToken())).thenReturn(token);
+        doNothing().when(userService).deleteVerificationToken(token);
+        doCallRealMethod().when(userService).completeRegistration(token.getToken());
+
+        mvc.perform(get("/verification").session(session)
+                .param("token", token.getToken())
+        )
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrlPattern("/error?type=expired-token"));
+
+        assertFalse(user.isEnabled());
+    }
+
+    private VerificationToken getExpiredToken() throws NoSuchFieldException, IllegalAccessException {
+        VerificationToken token = new VerificationToken(user);
+        Field expiryDate = VerificationToken.class.getDeclaredField("expiryDate");
+        expiryDate.setAccessible(true);
+        expiryDate.set(token, calculateExpiryDate());
+        return token;
+    }
+
+    private Instant calculateExpiryDate() {
+        ZonedDateTime utc = ZonedDateTime.now(ZoneId.of("UTC"));
+        return utc.minusDays(1).toInstant();
     }
 
 }

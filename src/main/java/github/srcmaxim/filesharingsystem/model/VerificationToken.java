@@ -26,13 +26,12 @@ public class VerificationToken {
             .build();
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private final String token = GENERATOR.generate(TOKEN_LENGTH);
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false, name = "user_id")
+    @OneToOne(fetch = FetchType.EAGER, optional = false)
+    @PrimaryKeyJoinColumn
     private final User user;
 
     /**

@@ -22,6 +22,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -201,6 +202,20 @@ public class SecurityControllerTest {
     private Instant calculateExpiryDate() {
         ZonedDateTime utc = ZonedDateTime.now(ZoneId.of("UTC"));
         return utc.minusDays(1).toInstant();
+    }
+
+    @Test
+    public void shouldRedirectErrorWhenUserNotEnabled() throws Exception {
+        doThrow(new AccountExpiredException("email-not-verified"))
+                .when(securityService).loadUserByUsername(any());
+
+        mvc.perform(post("/login").session(session).with(csrf())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("login", user.getLogin())
+                .param("password", user.getPassword())
+        )
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrlPattern("/info?type=email-not-verified"));
     }
 
 }

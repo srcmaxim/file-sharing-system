@@ -1,10 +1,11 @@
 package github.srcmaxim.filesharingsystem.service;
 
+import github.srcmaxim.filesharingsystem.annotation.Loggable;
 import github.srcmaxim.filesharingsystem.model.Folder;
 import github.srcmaxim.filesharingsystem.model.Resource;
 import github.srcmaxim.filesharingsystem.model.User;
 import github.srcmaxim.filesharingsystem.repository.ResourceRepository;
-import github.srcmaxim.filesharingsystem.annotation.Loggable;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,9 @@ public class ResourceService {
 
     private ResourceRepository repository;
     private UserService userService;
+
+    @Loggable
+    private Logger logger;
 
     @Autowired
     public ResourceService(ResourceRepository repository, UserService userService) {

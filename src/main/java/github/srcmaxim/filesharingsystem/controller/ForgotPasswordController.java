@@ -4,6 +4,7 @@ package github.srcmaxim.filesharingsystem.controller;
 import github.srcmaxim.filesharingsystem.annotation.Loggable;
 import github.srcmaxim.filesharingsystem.service.ServiceException;
 import github.srcmaxim.filesharingsystem.service.UserService;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Loggable
 @RequestMapping("/forgot-password")
 public class ForgotPasswordController {
+
+    @Loggable
+    private Logger logger;
 
     private UserService userService;
 

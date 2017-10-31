@@ -3,6 +3,7 @@ package github.srcmaxim.filesharingsystem.service;
 import github.srcmaxim.filesharingsystem.annotation.Loggable;
 import github.srcmaxim.filesharingsystem.model.User;
 import github.srcmaxim.filesharingsystem.model.VerificationToken;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -16,6 +17,9 @@ import javax.mail.internet.MimeMessage;
 public class EmailService {
 
     private JavaMailSender mailSender;
+
+    @Loggable
+    private Logger logger;
 
     @Autowired
     public void setMailSender(JavaMailSender mailSender) {

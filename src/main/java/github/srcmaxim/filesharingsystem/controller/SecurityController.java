@@ -7,6 +7,7 @@ import github.srcmaxim.filesharingsystem.model.User;
 import github.srcmaxim.filesharingsystem.service.ServiceException;
 import github.srcmaxim.filesharingsystem.service.UserPrincipalsService;
 import github.srcmaxim.filesharingsystem.service.UserService;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,6 +34,9 @@ public class SecurityController {
     private UserService userService;
     private UserPrincipalsService securityService;
     private PasswordEncoder encoder;
+
+    @Loggable
+    private Logger logger;
 
     @Autowired
     public SecurityController(UserService userService, UserPrincipalsService securityService,

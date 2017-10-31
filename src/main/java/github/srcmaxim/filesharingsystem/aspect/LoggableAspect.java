@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class LoggableAspect {
 
-    final Logger logger = LoggerFactory.getLogger("github.srcmaxim.filesharingsystem");
+    private final Logger logger = LoggerFactory.getLogger("github.srcmaxim.filesharingsystem");
 
     @Around("@within(github.srcmaxim.filesharingsystem.annotation.Loggable)")
     public Object log(ProceedingJoinPoint point) throws Throwable {

@@ -4,6 +4,7 @@ import github.srcmaxim.filesharingsystem.annotation.Loggable;
 import github.srcmaxim.filesharingsystem.model.File;
 import github.srcmaxim.filesharingsystem.model.Resource;
 import github.srcmaxim.filesharingsystem.service.ResourceService;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +19,9 @@ import javax.validation.Valid;
 @Loggable
 @RequestMapping("/resources")
 public class ResourceController {
+
+    @Loggable
+    private Logger logger;
 
     private ResourceService service;
 

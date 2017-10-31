@@ -4,6 +4,7 @@ import github.srcmaxim.filesharingsystem.annotation.Loggable;
 import github.srcmaxim.filesharingsystem.model.User;
 import github.srcmaxim.filesharingsystem.model.UserPrincipals;
 import github.srcmaxim.filesharingsystem.repository.UserRepository;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,6 +18,9 @@ import javax.transaction.Transactional;
 public class UserPrincipalsService implements UserDetailsService {
 
     UserRepository repository;
+
+    @Loggable
+    private Logger logger;
 
     @Autowired
     public UserPrincipalsService(UserRepository repository) {

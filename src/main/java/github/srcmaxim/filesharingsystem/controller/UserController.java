@@ -4,6 +4,7 @@ import github.srcmaxim.filesharingsystem.annotation.Loggable;
 import github.srcmaxim.filesharingsystem.model.User;
 import github.srcmaxim.filesharingsystem.service.ResourceService;
 import github.srcmaxim.filesharingsystem.service.UserService;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +22,9 @@ public class UserController {
 
     private UserService userService;
     private ResourceService resourceService;
+
+    @Loggable
+    private Logger logger;
 
     @Autowired
     public UserController(UserService service, ResourceService resourceService) {

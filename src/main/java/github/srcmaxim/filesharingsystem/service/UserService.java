@@ -8,6 +8,7 @@ import github.srcmaxim.filesharingsystem.repository.UserRepository;
 import github.srcmaxim.filesharingsystem.repository.VerificationTokenRepository;
 import github.srcmaxim.filesharingsystem.util.PasswordGenerator;
 import org.hibernate.validator.internal.constraintvalidators.bv.PatternValidator;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,9 @@ public class UserService {
     private VerificationTokenRepository tokenRepository;
     private EmailService emailService;
     private PasswordEncoder encoder;
+
+    @Loggable
+    private Logger logger;
 
     @Autowired
     public UserService(UserRepository userRepository, VerificationTokenRepository tokenRepository,

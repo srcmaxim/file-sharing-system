@@ -2,6 +2,7 @@ package github.srcmaxim.filesharingsystem.controller;
 
 import github.srcmaxim.filesharingsystem.model.Authority;
 import github.srcmaxim.filesharingsystem.model.User;
+import github.srcmaxim.filesharingsystem.model.UserPrincipals;
 import github.srcmaxim.filesharingsystem.model.VerificationToken;
 import github.srcmaxim.filesharingsystem.repository.UserRepository;
 import github.srcmaxim.filesharingsystem.repository.VerificationTokenRepository;
@@ -216,6 +217,26 @@ public class SecurityControllerTest {
         )
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrlPattern("/info?type=email-not-verified"));
+    }
+
+    @Test
+    public void shouldLoginWhenUserEnabled() throws Exception {
+        user.setEnabled(true);
+        String encodedPassword = encoder.encode(user.getPassword());
+        doReturn(new UserPrincipals(user){
+            @Override
+            public String getPassword() {
+                return encodedPassword;
+            }
+        }).when(securityService).loadUserByUsername(user.getLogin());
+
+        mvc.perform(post("/login").session(session).with(csrf())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("login", user.getLogin())
+                .param("password", user.getPassword())
+        )
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/users"));
     }
 
 }

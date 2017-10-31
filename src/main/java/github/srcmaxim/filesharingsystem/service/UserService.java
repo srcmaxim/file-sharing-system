@@ -25,7 +25,7 @@ import java.util.List;
 public class UserService {
 
     private UserRepository userRepository;
-    private final VerificationTokenRepository tokenRepository;
+    private VerificationTokenRepository tokenRepository;
     private EmailService emailService;
     private PasswordEncoder encoder;
 

@@ -64,8 +64,8 @@ MAIL_PWD, mail.password
 
 ## Testing
 
-- `npm test` - to run unit tests.
-- `npm itest` - to run integration tests.
+- `gradlew test` - to run unit tests.
+- `gradlew itest` - to run integration tests.
 
 ## Technologies used
 

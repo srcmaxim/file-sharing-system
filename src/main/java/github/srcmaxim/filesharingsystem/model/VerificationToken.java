@@ -26,12 +26,12 @@ public class VerificationToken {
             .build();
 
     @Id
+    @GeneratedValue
     private Long id;
 
     private final String token = GENERATOR.generate(TOKEN_LENGTH);
 
-    @OneToOne(fetch = FetchType.EAGER, optional = false)
-    @PrimaryKeyJoinColumn
+    @OneToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.PERSIST)
     private final User user;
 
     /**

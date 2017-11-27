@@ -36,6 +36,10 @@ All project issues and its current situation can be found at [scrum board page](
 
 All project issues can be found at [isssues page](https://github.com/srcmaxim/file-sharing-system/issues)
 
+## Class Diagramm
+
+[![Class Diagramm](https://user-images.githubusercontent.com/11833383/28808158-8ff08e14-7682-11e7-8795-13aa2e3d5b4f.jpg)](https://github.com/srcmaxim/file-sharing-system/issues/2)
+
 ## Build and Run
 
 First of all you need to configure the database. 
